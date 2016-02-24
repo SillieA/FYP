@@ -15,8 +15,17 @@ public class Peers {
 
 		Runnable r = new Runnable(){
 			public void run(){
-				Client c = new Client(Strings.PeerServerIP, 16789);
-				c.sendMessage(Keys.returnPublicKey(Main.keyP));
+				try{
+					Client c = new Client("25.47.33.74", 16789);
+					try {
+						Thread.sleep(1500);;
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					c.sendMessage(Keys.returnPublicKey(Main.keyP));
+				}catch(Exception e){
+					System.out.println("Could not connect to Peer server. Ensure server is running and restart program.");
+				}
 			}
 		};
 		Thread thr = new Thread(r);

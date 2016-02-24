@@ -23,7 +23,7 @@ public class Strings {
 	
 	//words used in logic
 	final public static String Genesis = "genesis";
-	final public static String PeerServerIP = "127.0.0.1";
+	final public static String PeerServerIP = "25.47.33.74";
 	final public static String Difficulty = "00000";
 	
 	//File names

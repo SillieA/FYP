@@ -17,12 +17,14 @@ public class Client{
 	//constructor
 	public Client(String host, int port){
 		serverIP = host;
+		this.port = port;
 		try {
 			name = String.valueOf(InetAddress.getLocalHost());
 			System.out.println(name);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		startRunning();
 	}
 	
 	//connect to server

@@ -25,6 +25,7 @@ public class Strings {
 	final public static String Genesis = "genesis";
 	final public static String PeerServerIP = "25.47.33.74";
 	final public static String Difficulty = "00000";
+	final public static int ServerPort = 19996;
 	
 	//File names
 	final public static String FileBlockChain = "C:\\FYP\\BlockChain.txt";

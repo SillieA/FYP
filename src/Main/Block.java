@@ -17,6 +17,7 @@ public class Block {
 	public int TxCount;
 	public int difficulty;
 	public String key;
+	public Transaction gen;
 	
 	public Block(String[] Header, String[] Meta, ArrayList<Transaction> Tx){
 		//for the header
@@ -46,6 +47,16 @@ public class Block {
 		this.TxCount = TxList.size();
 		this.difficulty = difficulty;
 		key = Keys.returnPublicKey(Main.keyP);
+	}
+	//creates reward tokens for miner
+	public void rewardTx(String token){
+		//number
+		//from
+		//to
+		//token
+		//reference
+		gen = new Transaction("", Strings.Genesis,this.key,token, hashHeader);
+		gen.generateReference();
 	}
 	//returns all of the values in theory
 	public String allValues(){

@@ -45,7 +45,8 @@ public class Client{
 	private void connectToServer() throws IOException{
 		System.out.println("Attempting connection...");
 		connection  = new Socket(InetAddress.getByName(serverIP),port);
-		System.out.println("connected to: " + connection.getInetAddress().getHostName());
+		
+		System.out.println("connected to: " + connection.getRemoteSocketAddress().toString());
 	}
 	// setup streams to send and receive messages
 	private void setupStreams() throws IOException{

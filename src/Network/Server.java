@@ -14,6 +14,7 @@ public class Server{
 	private ServerSocket server;
 	private Socket connection;
 	public UnconfirmedTx unconfirmedTxThread;
+	private String ClientIP;
 
 	//set up and run server - called once gui is made
 	public void startRunning(int port){
@@ -45,7 +46,8 @@ public class Server{
 	private void waitForConnection() throws IOException{
 		System.out.println("Waiting for someone to connect...");
 		connection = server.accept();//creates socket when connection is made
-		System.out.println("Now connected to " + connection.getInetAddress().getHostName());//other persons IP address
+		ClientIP = connection.getRemoteSocketAddress().toString();
+		System.out.println("Now connected to " + ClientIP);//other persons IP address
 	}
 	
 	//get stream to send and receive data
@@ -98,7 +100,6 @@ public class Server{
 		try{
 			output.writeObject(message);
 			output.flush();
-			//connection.getInetAddress().getHostName()to see IP
 			System.out.println(message);
 		}catch(IOException ioException){
 			System.out.println("Message not sert (Server)");
@@ -135,22 +136,22 @@ public class Server{
 		System.out.println("TxpoolReceive " + message);
 		Main.Transaction T = new Main.Transaction();
 		try{
-		int delimiter = message.indexOf("#")+5;//gets position immediately after #REQ
-		String tx = message.substring(delimiter);
-		
-		//debug
-//		System.out.println(tx);
-		
-		
-		String[] txVal = tx.split(" ");//split at the spaces
-		T.write(txVal[0],txVal[1],txVal[2],txVal[3],txVal[4]);//make 5 words into new tx
-//		System.out.println(T.values());
-		UnconfirmedTx.push(T);
+			int delimiter = message.indexOf("#")+5;//gets position immediately after #REQ
+			String tx = message.substring(delimiter);
+
+			String[] txVal = tx.split(" ");//split at the spaces
+			try{
+				T.write(txVal[0],txVal[1],txVal[2],txVal[3],txVal[4]);//make 5 words into new tx
+				UnconfirmedTx.push(T);
+			}catch(ArrayIndexOutOfBoundsException e){
+				System.out.println("Error with Tx parameters from " + ClientIP);
+			}
+
 		}catch(Exception e){
 			System.out.println("error : empty TxPool message");
 			e.printStackTrace();
 		}
-		
+
 	}
 	//returns public key when informed of inbound transaction
 	private void txReqReceive(String message){

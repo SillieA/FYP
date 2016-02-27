@@ -21,7 +21,7 @@ public class BlockChain {
 		    loadBlockChain();
 		}
 		else{
-			Genesis.checkBlockChain();
+			GenesisBlock.checkBlockChain();
 		}
 	}
 	

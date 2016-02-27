@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import Mine.findNonce;
 
-public class Genesis {
+public class GenesisBlock {
 	public static void checkBlockChain(){
 		//if peer server = empty
 

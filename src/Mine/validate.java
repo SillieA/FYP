@@ -16,9 +16,10 @@ public class validate {
 		for(Block b : BlockChain.MainChain){
 			for(Transaction Tx : b.TxList){
 				//0=TxNumber, 1 = From, 2 = to, 3 = Token, 4 = RefTx
-				if(T.RefTx.equals(Tx.TxNumber)){
-					if(T.Token.equals(Tx.Token)){
+				if(T.RefTx.equals(Tx.TxNumber) || b.gen.TxNumber == T.RefTx){
+					if(T.Token.equals(Tx.Token)|| T.Token.equals(b.gen.Token)){
 						//continues with the rest of the program
+						T.generateReference();
 						return true;
 					}
 					else{

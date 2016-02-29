@@ -1,5 +1,9 @@
 package Main;
 
+import java.util.Random;
+
+import Mine.findNonce;
+
 public class Strings {
 	
 	//words used by terminal, human facing
@@ -35,5 +39,34 @@ public class Strings {
 //	final public static String
 //	final public static String
 //	final public static String
+	
+	
+	//returns a random hash (possibly requested by nodes) for token generation
+	public static String rewards(){
+		Random r = new Random();
+		int rand = r.nextInt((8-1)+1)+1;
+		
+		final String reward1 = findNonce.sha256("Client 1" + "Password 1");
+		final String reward2 = findNonce.sha256("Client 2" + "Password 2");
+		final String reward3 = findNonce.sha256("Client 3" + "Password 3");
+		final String reward4 = findNonce.sha256("Client 4" + "Password 4");
+		final String reward5 = findNonce.sha256("Client 5" + "Password 5");
+		final String reward6 = findNonce.sha256("Client 6" + "Password 6");
+		final String reward7 = findNonce.sha256("Client 7" + "Password 7");
+		final String reward8 = findNonce.sha256("Client 8" + "Password 8");
+
+		switch(rand){
+		case 1 : return reward1;
+		case 2 : return reward2;
+		case 3 : return reward3;
+		case 4 : return reward4;
+		case 5 : return reward5;
+		case 6 : return reward6;
+		case 7 : return reward7;
+		case 8 : return reward8;
+		}
+		return reward1;
+
+	}
 
 }

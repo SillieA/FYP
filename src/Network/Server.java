@@ -2,10 +2,13 @@ package Network;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import Main.Block;
 import Main.BlockChain;
+import Main.Transaction;
 
 public class Server{
 
@@ -74,8 +77,9 @@ public class Server{
 					caller(type,message);//executes code depending on hashtag
 				}
 				else if(message.contains("SHUTDOWN SERVER")){
-					closeConnection();
 					message = "TERMINATE";
+					closeConnection();
+					
 				}
 			}catch(ClassNotFoundException classNotFoundException){
 				System.out.println("unknown class (Server) ");
@@ -115,20 +119,44 @@ public class Server{
 		switch(code){
 		case "TRE" : txReqReceive(message);
 		break;
-		case "BLK" : blockReceive(message);
+		case "BLK" : blockReceive(message);//block transmission received
 		break;
-		case "TPO" : txPoolReceive(message);
+		case "TPO" : txPoolReceive(message);//transaction transmission received
 		break;
-		case "PRQ" : peerRequest();
+		case "PER" : peerReceive(message);//receive peer list from peer server
 		break;
-		case "DEB" : BlockChain.printChain();
+		case "DEB" : BlockChain.printChain();//debug: prints chain in terminal
 		break;
-		case "SAV" : BlockChain.saveBlockChain();
+		case "SAV" : BlockChain.saveBlockChain();//save chain to file
 		break;
+		case "BLR" : sendBlockChain();//send blockchain
 		}
+	}
+	private void sendBlockChain(){
+		
 	}
 	private void blockReceive(String message) {
 		System.out.println("blockReceive" + message);
+		String[] Blocks = message.split("|");
+		String[] Header = null;
+		String[] Meta = null;
+		int headStart;
+		int headFin;
+		int metaStart;
+		int metaFin;
+		int txStart;
+		int txFin;
+		ArrayList<Transaction> Transactions = null;
+		for(String s : Blocks){
+			headStart = s.indexOf("+");
+			headFin = s.indexOf("+", headStart +1);
+			metaStart = s.indexOf("-");
+			metaFin = s.indexOf("-", metaStart + 1);
+			txStart = s.indexOf("~");
+			txFin = s.indexOf("~", txStart + 1);
+			
+			Block b = new Block(Header, Meta, Transactions);
+		}
 		
 	}
 	//new tx for txpool
@@ -161,13 +189,15 @@ public class Server{
 		sendMessage(kp[0]);
 		
 	}
-	private void peerRequest(){
+	private void peerReceive(String list){
+		String[] s;
+		String[] p;
 		Set<String[]> sArr = new HashSet<String[]>();
-		String message = "";
-		for(String[] s : sArr){
-			message += s[0] + " " + s[1];
+		s = list.split(",");
+		for(String str : s){
+			p = str.split(" ");
+			Peers.addPeers(p);
 		}
-		sendMessage(message);
 	}
 }
 

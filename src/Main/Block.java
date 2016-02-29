@@ -47,6 +47,7 @@ public class Block {
 		this.TxCount = TxList.size();
 		this.difficulty = difficulty;
 		key = Keys.returnPublicKey(Main.keyP);
+		rewardTx(Strings.rewards());
 	}
 	//creates reward tokens for miner
 	public void rewardTx(String token){
@@ -62,9 +63,19 @@ public class Block {
 	public String allValues(){
 		String Header = "\r\n@HED " +  headerValues();//returns the values of the header
 		String Meta = "\r\n@MET " + metaValues();
+		String Gen = "\r\n@GEN " + generatedTxValues();
 		String Transactions = "\r\n@TXS\r\n" + txValues(); 
 		
-		return Header + Meta + Transactions ;
+		
+		return Header + Meta + Gen + Transactions ;
+	}
+	public String valuesForSending(){
+		String Header = " + " +  headerValues() +  " + ";//returns the values of the header
+		String Meta = " - " + metaValues() + " - ";
+		String Gen = " * " + generatedTxValues() + " * ";
+		String Transactions = " ~ " + txValues() + " ~ ";
+		
+		return Header + Meta + Gen + Transactions;
 	}
 	public ArrayList<Transaction> Transactions(){
 		return TxList;
@@ -87,6 +98,10 @@ public class Block {
 	//returns the meta values
 	public String metaValues(){
 		return hashHeader + " " + String.valueOf(TxCount) + " " + String.valueOf(difficulty) + " " + key;
+	}
+	public String generatedTxValues(){
+		String gen = this.gen.values();
+		return gen;
 	}
 	public String txValues(){
 		String ans = "";

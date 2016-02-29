@@ -61,11 +61,17 @@ public class Client{
 			try{
 				message = (String) input.readObject();
 				System.out.println(message);
+				taskAllocator(message);
 			}catch(ClassNotFoundException classNotFoundException){
 				System.out.println("unknown object type (Client)");
 			}
 		}while(!message.contains("TERMINATE"));
 	}
+	private void taskAllocator(String message) {
+		
+		
+	}
+
 	//close streams and sockets
 	private void closeCrap(){
 		System.out.println("shutting down");

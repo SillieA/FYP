@@ -13,7 +13,8 @@ public class validate {
 	//check in those to see if theyve received token from end of chain
 	//check forwards to see if its been sent again
 	public boolean checkTx(Transaction T){
-		for(Block b : BlockChain.MainChain){
+		for(int i = BlockChain.MainChain.size(); i>= 0;i--){
+			Block b = BlockChain.MainChain.get(i);
 			for(Transaction Tx : b.TxList){
 				//0=TxNumber, 1 = From, 2 = to, 3 = Token, 4 = RefTx
 				if(T.RefTx.equals(Tx.TxNumber) || b.gen.TxNumber == T.RefTx){
@@ -40,7 +41,8 @@ public class validate {
 		String merkle;
 		String merkleandPBH;
 		String hash;
-		for(Block blk : BlockChain.MainChain){
+		for(int i = BlockChain.MainChain.size(); i>= 0;i--){
+			Block blk = BlockChain.MainChain.get(i);
 			if(blk.hashHeader.equals(b.hashPrevBlock)){
 				merkle = Merkle.root(b.TxList);
 				merkleandPBH = findNonce.sha256(merkle + b.hashPrevBlock);

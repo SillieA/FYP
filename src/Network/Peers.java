@@ -16,13 +16,16 @@ public class Peers {
 		Runnable r = new Runnable(){
 			public void run(){
 				try{
-					Client c = new Client("25.47.33.74", 16789);
-					try {
-						Thread.sleep(1500);;
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+					while(true){
+						Client c = new Client("25.47.33.74", 16789);
+						try {
+							Thread.sleep(1500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						c.sendMessage(Keys.returnPublicKey(Main.keyP));
+						Thread.sleep(60000);
 					}
-					c.sendMessage(Keys.returnPublicKey(Main.keyP));
 				}catch(Exception e){
 					System.out.println("Could not connect to Peer server. Ensure server is running and restart program.");
 				}
@@ -50,5 +53,9 @@ public class Peers {
 			sArr.add(s);
 		}
 		return sArr;
+	}
+	public static void addPeers(String[] IPPK){
+		Pair p = new Pair(IPPK[0],IPPK[1]);
+		arr.add(p);
 	}
 }

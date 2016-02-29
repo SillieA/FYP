@@ -30,6 +30,13 @@ public class BlockChain {
 			System.out.println(MainChain.get(i).allValues());
 		}
 	}
+	public static String chainAsString(){
+		String s = "";
+		for(int i = 0; i < MainChain.size(); i++){
+			s += "|" + MainChain.get(i).allValues();
+		}
+		return s;
+	}
 	public static void verifyChain(){
 		
 	}

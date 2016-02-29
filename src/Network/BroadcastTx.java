@@ -13,7 +13,7 @@ public class BroadcastTx {
 				C.sendMessage("TERMINATE");
 			}
 			catch(Exception e){
-				//remove peers?
+				System.out.println(e.toString());
 			}
 		}
 	}

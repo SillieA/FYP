@@ -74,6 +74,7 @@ public class Server{
 				if(message.contains("#")){
 					typeDelimiter = message.indexOf("#")+1;
 					type = message.substring(typeDelimiter,typeDelimiter + 3);
+					
 					caller(type,message);//executes code depending on hashtag
 				}
 				else if(message.contains("SHUTDOWN SERVER")){
@@ -133,32 +134,27 @@ public class Server{
 		}
 	}
 	private void sendBlockChain(){
-		
-	}
-	private void blockReceive(String message) {
-		System.out.println("blockReceive" + message);
-		String[] Blocks = message.split("|");
-		String[] Header = null;
-		String[] Meta = null;
-		int headStart;
-		int headFin;
-		int metaStart;
-		int metaFin;
-		int txStart;
-		int txFin;
-		ArrayList<Transaction> Transactions = null;
-		for(String s : Blocks){
-			headStart = s.indexOf("+");
-			headFin = s.indexOf("+", headStart +1);
-			metaStart = s.indexOf("-");
-			metaFin = s.indexOf("-", metaStart + 1);
-			txStart = s.indexOf("~");
-			txFin = s.indexOf("~", txStart + 1);
-			
-			Block b = new Block(Header, Meta, Transactions);
+		String s = "";
+		for(Block b : BlockChain.MainChain){
+			s += " | " + " + " + b.headerValues() + " + " + " - " + b.metaValues() + " - " + " ~ " + b.txValuesNoNewLine() + " ~ ";
 		}
-		
+		sendMessage(s);
 	}
+	private void blockReceive(String m) {
+		String message = m.substring(4);
+		String[] Blocks = message.split("##");
+		for(String str : Blocks){
+			System.out.println(str);
+		}
+		for(String str : Blocks){
+			if(!BlockListener.containsLetters(str)){
+				BlockListener.blockReceive(str);
+			}
+		}
+		BlockListener.printChain();
+		BlockListener.altChain.clear();
+	}
+
 	//new tx for txpool
 	private void txPoolReceive(String message) {
 		System.out.println("TxpoolReceive " + message);

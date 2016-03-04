@@ -33,7 +33,7 @@ public class BlockChain {
 	public static String chainAsString(){
 		String s = "";
 		for(int i = 0; i < MainChain.size(); i++){
-			s += "|" + MainChain.get(i).allValues();
+			s += "##" + MainChain.get(i).allValues();
 		}
 		return s;
 	}

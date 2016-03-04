@@ -118,6 +118,21 @@ public class Block {
 //		}
 		return ans;
 	}
+	public String txValuesNoNewLine(){
+		String ans = "";
+		if(TxList==null){
+			System.out.println("Empty Tx arraylist for block");
+		}
+		else{
+			for(int i = 0; i < TxList.size();i++){
+				ans += TxList.get(i).values() + " ";
+			}
+		}
+//		for(Transaction T : TxList){
+//			ans += T.values() + "\r\n";
+//		}
+		return ans;
+	}
 	//returns the hash of the header
 	public String headerHash(){
 		return hashHeader;

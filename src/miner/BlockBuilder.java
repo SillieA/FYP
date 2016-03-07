@@ -39,7 +39,7 @@ public class BlockBuilder {
 						String prevBlockHash = BlockChain.latestBlockHeader();
 						String merkle = Merkle.root(txLista);
 //						System.out.println(Strings.NoteMiningNonce + merkle + "\n" + prevBlockHash);
-						System.out.println("mined block, now broadcasting");
+//						System.out.println("mined block, now broadcasting");                                                  
 						int[] difficultyNonce = ProofOfWork.find(merkle + prevBlockHash);
 						Block b = new Block(txLista, merkle,difficultyNonce[1] , prevBlockHash,difficultyNonce[0]);
 						generateRewardTx(b);

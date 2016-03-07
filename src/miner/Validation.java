@@ -6,22 +6,28 @@ import utils.Strings;
 import utils.Transaction;
 
 public class Validation {
-//validate Tx against blockchain
+	//validate Tx against blockchain
 	//collate blockchain???
 	//append the rest of the txs in the current block to the list
 	//collate all txs with sender as receiver
 	//check in those to see if theyve received token from end of chain
 	//check forwards to see if its been sent again
-	public boolean checkTx(Transaction T){
-		for(int i = BlockChain.MainChain.size(); i>= 0;i--){
+	public static boolean checkTx(Transaction T){
+		for(int i = BlockChain.MainChain.size()-1; i>= 0;i--){
 			Block b = BlockChain.MainChain.get(i);
 			for(Transaction Tx : b.TxList){
 				//0=TxNumber, 1 = From, 2 = to, 3 = Token, 4 = RefTx
-				if(T.RefTx.equals(Tx.TxNumber) || b.gen.TxNumber == T.RefTx){
+				if(T.RefTx.equals(Tx.TxNumber) || b.gen.TxNumber.equals(T.RefTx)){
 					if(T.Token.equals(Tx.Token)|| T.Token.equals(b.gen.Token)){
 						//continues with the rest of the program
-						T.generateReference();
-						return true;
+						//						T.generateReference();
+						if(referenceChecker(T.RefTx) == true){
+							System.out.println("Transaction Valid!");
+							return true;
+						}
+						else{
+							System.out.println("token has already been spent!");
+						}
 					}
 					else{
 						System.out.println("Error: Tx " + T.TxNumber +  " From " + T.From + " has invalid token in reference Transaction");
@@ -29,7 +35,7 @@ public class Validation {
 					}	
 				}
 				else{
-					//					System.out.println("Error: Tx " + T.TxNumber +  " From " + T.From + " has invalid TxNumber!");
+					System.out.println("Error: Tx " + T.TxNumber +  " From " + T.From + " has invalid TxNumber!");
 					return false;
 				}
 			}
@@ -37,7 +43,21 @@ public class Validation {
 		System.out.println("Error: Tx " + T.TxNumber +  " From " + T.From + " has an ERROR from ValidateTx!");
 		return false;
 	}
-	public boolean checkBlock(Block b){
+	//makes sure no other transactions have referenced the transaciton
+	static boolean referenceChecker(String ref){
+		for(int i = BlockChain.MainChain.size()-1; i>= 0;i--){
+			Block b = BlockChain.MainChain.get(i);
+			for(Transaction Tx : b.TxList){
+				if(Tx.RefTx.equals(ref)||b.gen.RefTx.equals(ref)){
+					return false;
+				}
+			}
+		}
+		return true;
+
+	}
+	
+	public static boolean checkBlock(Block b){
 		String merkle;
 		String merkleandPBH;
 		String hash;

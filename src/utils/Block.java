@@ -137,7 +137,5 @@ public class Block {
 	//returns the hash of the header
 	public String headerHash(){
 		return hashHeader;
-	}
-
-	
+	}	
 }

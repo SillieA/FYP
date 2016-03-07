@@ -11,7 +11,6 @@ import java.security.spec.InvalidKeySpecException;
 import miner.UnconfirmedTx;
 import peers.Peers;
 import server.NewServer;
-import server.Server;
 //loads and saves Tx chain, contains printTxArr method, start server and keyCheck
 public class Main {
 	//the transaction list
@@ -22,17 +21,17 @@ public class Main {
 	public static Peers P;
 	
 	//main method
-	@SuppressWarnings("unused")
 	public static void main(String args[]) throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException{
 		
 		keyCheck();//see if private and public keys exist. if not, make some
 		
 		P = new Peers();//initialises the list of peers TO BE REPLACED WITH CENTRAL SERVER
 		
-		BlockChain BLKCHN = new BlockChain();
+		new BlockChain();
+		new UnconfirmedTx();
 		BlockChain.initialiseChain();
 		startServer();//starts server which contains the initialiser for UnconfirmedTxList
-		new UnconfirmedTx();
+
 
 	}
 	//starts the server to listen for connections
@@ -47,7 +46,6 @@ public class Main {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
 		    }  
 		};
 		t.start();

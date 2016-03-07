@@ -1,7 +1,5 @@
 package send;
 
-import java.util.ArrayList;
-
 import peers.Pair;
 import peers.Peers;
 import utils.Block;

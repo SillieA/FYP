@@ -1,8 +1,11 @@
 package server;
 
-import java.io.*;
-import java.net.*;
-import java.util.ArrayList;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +13,6 @@ import miner.UnconfirmedTx;
 import peers.Peers;
 import utils.Block;
 import utils.BlockChain;
-import utils.Transaction;
 
 public class Server{
 

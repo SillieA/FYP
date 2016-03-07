@@ -36,7 +36,7 @@ public class Client{
 		}catch(EOFException eofException){
 			System.out.println("Server Terminated connection");
 		}catch(IOException ioException){
-			ioException.printStackTrace();
+			ioException.toString();
 		}finally{
 			closeCrap();
 		}

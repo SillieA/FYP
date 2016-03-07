@@ -37,12 +37,22 @@ public class BlockChain {
 		}
 		return s;
 	}
-	public static void verifyChain(){
-		
-	}
+
 	public static String latestBlockHeader(){
 		//will not work if there is no origin block
-		Block b = MainChain.get(MainChain.size()-1);
+		Block b;
+		try{
+			b = MainChain.get(MainChain.size()-1);
+		}catch(ArrayIndexOutOfBoundsException e){
+			System.out.println("blockchain not loaded, attempting to load again");
+			try{
+				initialiseChain();
+			}catch(IOException IOE){
+				System.out.println(IOE.toString());
+			}
+			
+			b = MainChain.get(MainChain.size()-1);
+		}
 		return b.hashHeader;
 	}
 	public static void saveBlockChain(){
@@ -66,10 +76,12 @@ public class BlockChain {
 			boolean loop = true;
 			String[] Header;
 			String[] Meta;
+			String[] Gen;
 			String[] Tx;
 			String[] Temp;
 			ArrayList<Transaction> TxList = new ArrayList<Transaction>();
 			Transaction T;
+			Transaction G;
 			
 			while (loop) {
 				if(!line.startsWith("%")){
@@ -77,23 +89,34 @@ public class BlockChain {
 						Temp = line.split(Pattern.quote(" "));
 						Header = Arrays.copyOfRange(Temp, 1, Temp.length);
 						line = br.readLine();
+//						System.out.println("HED");
 						if (line.startsWith("@MET")){
 							Temp = line.split(Pattern.quote(" "));
 							Meta = Arrays.copyOfRange(Temp, 1, Temp.length);
 							line = br.readLine();
-							if (line.startsWith("@TXS")){
-								TxList = new ArrayList<Transaction>();
+//							System.out.println("MET");
+							if(line.startsWith("@GEN")){
+								Temp = line.split(Pattern.quote(" "));
+								Gen = Arrays.copyOfRange(Temp, 1, Temp.length);
+								G = new Transaction(Gen);
+//								System.out.println("GEN");
 								line = br.readLine();
-								while(!line.isEmpty()){
-									Tx = line.split(Pattern.quote(" "));
-									T = new Transaction(Tx);
-									System.out.println(T.values());
-									TxList.add(T);
+								if (line.startsWith("@TXS")){
+									System.out.println("TXS");
+									TxList = new ArrayList<Transaction>();
 									line = br.readLine();
+									while(!line.isEmpty()){
+										Tx = line.split(Pattern.quote(" "));
+										T = new Transaction(Tx);
+//										System.out.println(T.values());
+										TxList.add(T);
+										line = br.readLine();
+									}
+									Block b = new Block(Header, Meta, TxList);
+									b.gen = G;
+//									System.out.println("Block loaded");
+									MainChain.add(b);
 								}
-								Block b = new Block(Header, Meta, TxList);
-//								System.out.println(b.allValues());
-								MainChain.add(b);
 							}
 						}
 						else{
@@ -118,8 +141,11 @@ public class BlockChain {
 						}
 					}
 				}catch(NullPointerException e){
+					printChain();
+
 					loop = false;
 				}
+				
 			}
 		}
 	}

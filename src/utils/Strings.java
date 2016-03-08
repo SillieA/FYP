@@ -30,6 +30,11 @@ public class Strings {
 	final public static String Genesis = "genesis";
 	final public static String PeerServerIP = "25.47.33.74";
 	final public static String Difficulty = "00000";
+	final public static String BlockDelim = "##";
+	final public static String HeadDelim = "+";
+	final public static String MetaDelim = "-";
+	final public static String GenDelim = ":";
+	final public static String TxDelim = "~";
 	final public static int ServerPort = 19996;
 	
 	//File names

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import peers.Pair;
 import send.Client;
 import utils.Block;
+import utils.BlockChain;
 import utils.Strings;
 import utils.Transaction;
 
@@ -26,45 +27,52 @@ public class BlockListener {
 	}
 	public static void blockReceive(String s){
 		Transaction T = null;
+		Transaction GenTx;
 		Block b;
 		ArrayList<Transaction> txArr = new ArrayList<Transaction>();
 		String[] Header = null;
 		String[] Meta = null;
+		String[] Gen = null;
 		String[] Transactions = null;
 		String h;
 		String m;
 		String t;
+		String g;
 		int headStart;
 		int headFin;
 		int metaStart;
 		int metaFin;
+		int genStart;
+		int genFin;
 		int txStart;
 		int txFin;
 		
-		headStart = s.indexOf("+");
-		headFin = s.indexOf("+", headStart +1);
-		metaStart = s.indexOf("*");
-		metaFin = s.indexOf("-", metaStart + 1);
-		txStart = s.indexOf("~");
-		txFin = s.indexOf("~", txStart + 1);
+		headStart = s.indexOf(Strings.HeadDelim);
+		headFin = s.indexOf(Strings.HeadDelim, headStart +1);
+		metaStart = s.indexOf(Strings.MetaDelim);
+		metaFin = s.indexOf(Strings.MetaDelim, metaStart + 1);
+		genStart = s.indexOf(Strings.GenDelim);
+		genFin = s.indexOf(Strings.GenDelim, genStart + 1);
+		txStart = s.indexOf(Strings.TxDelim);
+		txFin = s.indexOf(Strings.TxDelim, txStart + 1);
 		System.out.println(String.valueOf(headStart + " " + headFin));
 		
 		h = s.substring(headStart+1, headFin-1);
 		m = s.substring(metaStart+1, metaFin-1);
+		g = s.substring(genStart+1, genFin-1);
 		t = s.substring(txStart+1, txFin-1);
 		
-		System.out.println("hmt vals");
+		System.out.println("hmgt vals");
 		System.out.println(h);
 		System.out.println(m);
+		System.out.println(g);
 		System.out.println(t);
 		
 		Header = h.split(" ");
 		Meta = m.split(" ");
+		Gen = g.split(" ");
 		Transactions = t.split(" ");
 		
-		for(int i = 0;i<Header.length;i++){
-			
-		}
 		System.out.println();
 		int i = 0;
 		for(String str : Meta){
@@ -73,10 +81,11 @@ public class BlockListener {
 		}
 		//%Transaction Number, From, To, Token value, Reference Transaction 
 		System.out.println();
-		i = 0;
-		for(String str : Transactions){
-			switch(i%5){
-			case 0 : if(i!=0){
+		for(int ii = 0; i < Transactions.length;i++){
+			if(Transactions[ii].equals(null)) ii++;
+			String str = Transactions[ii];
+			switch(ii%5){
+			case 0 : if(ii!=0){
 				T = new Transaction();
 				T.TxNumber = str;
 				System.out.println("Txnumber: " + str);
@@ -92,10 +101,18 @@ public class BlockListener {
 			txArr.add(T);
 			break;
 			}
-			i++;
 		}
-		b = new Block(Transactions, Transactions, null);
-		altChain.add(b);
+		GenTx = new Transaction(Gen);
+		b = new Block(Header, Meta, txArr);
+		b.gen = GenTx;
+		if(BlockChain.MainChain.get(BlockChain.MainChain.size()-1).hashHeader.equals(b.hashPrevBlock)){
+			BlockChain.MainChain.add(b);
+		}
+		else{
+			altChain.add(b);
+			System.out.println("Block Added to AltChain");
+		}
+		
 		
 	}
 	public static void printChain(){

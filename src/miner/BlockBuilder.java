@@ -45,10 +45,17 @@ public class BlockBuilder {
 						generateRewardTx(b);
 						BroadcastBlock.Broadcast(b);
 						//take used tx out of pool
-						BlockChain.MainChain.add(b);
-						for(int i = txLista.size()-1; i >= 0 ;i--){
-							TxList.remove(i);
+						if(b.hashPrevBlock.equals(BlockChain.latestBlockHeader())){
+							BlockChain.MainChain.add(b);
+							for(int i = txLista.size()-1; i >= 0 ;i--){
+								TxList.remove(i);
+							}
 						}
+						else{
+							b.destroy();
+						}
+
+
 					}
 				}
 			}

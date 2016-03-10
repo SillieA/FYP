@@ -42,6 +42,7 @@ public class Strings {
 	final public static String FilePublicKey = "C:\\FYP\\public.key";
 	final public static String FilePrivateKey = "C:\\FYP\\private.key";
 	final public static String FileDirectory = "C:\\FYP\\";
+	final public static String FileAltChains = "C:\\FYP\\AltChain";
 //	final public static String
 //	final public static String
 //	final public static String

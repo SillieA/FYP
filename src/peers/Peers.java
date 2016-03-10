@@ -10,10 +10,10 @@ import utils.Main;
 import utils.Strings;
 
 public class Peers {
-	public static Set<Pair> arr;
+	public static Set<Node> arr;
 
 	public Peers(){
-		arr = new HashSet<Pair>();
+		arr = new HashSet<Node>();
 
 		Runnable r = new Runnable(){
 			public void run(){
@@ -25,7 +25,7 @@ public class Peers {
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						c.sendMessage(Keys.returnPublicKey(Main.keyP));
+						c.sendMessage(Main.keyClass.returnPublicKey(Main.keyP));
 						c.sendMessage("TERMINATE");
 						Thread.sleep(60000);
 					}
@@ -40,10 +40,11 @@ public class Peers {
 	//returns all the peers in the array
 	public static Set<String[]> getPeers(){
 		Set<String[]> sArr = new HashSet<String[]>();
-		String[] s = {"",""};
-		for(Pair p : arr){
+		String[] s = {"","",""};
+		for(Node p : arr){
 			s[0] = p.IP;
 			s[1] = p.PK;
+			s[2] = p.Type;
 			sArr.add(s);
 		}
 		return sArr;
@@ -51,14 +52,19 @@ public class Peers {
 	public static Set<String> getIPs(){
 		Set<String> sArr = new HashSet<String>();
 		String s; 
-		for(Pair p : arr){
+		for(Node p : arr){
 			s = p.IP;
 			sArr.add(s);
 		}
 		return sArr;
 	}
 	public static void addPeers(String[] IPPK){
-		Pair p = new Pair(IPPK[0],IPPK[1]);
+		if(IPPK.length == 3){
+		Node p = new Node(IPPK[0],IPPK[1],IPPK[2]);
 		arr.add(p);
+		}
+		else{
+			System.out.println("ERROR: node info contains incorrect number of elements");
+		}
 	}
 }

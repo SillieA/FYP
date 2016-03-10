@@ -24,6 +24,7 @@ public class Block {
 		//for the header
 		hashPrevBlock = Header[0];
 		hashMerkleRoot = Header[1];
+		System.out.println(String.valueOf(Header[2]));
 		time = Long.valueOf(Header[2]);
 		Nonce = Integer.valueOf(Header[3]);
 		//for the txs
@@ -47,7 +48,7 @@ public class Block {
 		hashHeader = ProofOfWork.sha256(headerValues());
 		this.TxCount = TxList.size();
 		this.difficulty = difficulty;
-		key = Keys.returnPublicKey(Main.keyP);
+		key = Main.keyClass.returnPublicKey(Main.keyP);
 		rewardTx(Strings.rewards());
 	}
 	//creates reward tokens for miner

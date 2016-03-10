@@ -124,8 +124,8 @@ public class Server{
 	//SAV = saves blockchain to file
 	private void caller(String code, String message){
 		switch(code){
-		case "TRE" : txReqReceive(message);
-		break;
+//		case "TRE" : txReqReceive(message);
+//		break;
 		case "BLK" : blockReceive(message);//block transmission received
 		break;
 		case "TPO" : txPoolReceive(message);//transaction transmission received
@@ -153,12 +153,12 @@ public class Server{
 			System.out.println(str);
 		}
 		for(String str : Blocks){
-			if(!BlockListener.containsLetters(str)){
-				BlockListener.blockReceive(str);
+			if(!BlockHandler.containsLetters(str)){
+				BlockHandler.blockReceive(str);
 			}
 		}
-		BlockListener.printChain();
-		BlockListener.altChain.clear();
+//		BlockHandler.printChain();
+//		BlockHandler.altChain.clear();
 	}
 
 	//new tx for txpool
@@ -184,13 +184,13 @@ public class Server{
 
 	}
 	//returns public key when informed of inbound transaction
-	private void txReqReceive(String message){
-		System.out.println("txReqReceive" + message);
-		String[] kp = utils.Keys.returnKeyPair(utils.Main.keyP);
-		
-		sendMessage(kp[0]);
-		
-	}
+//	private void txReqReceive(String message){
+//		System.out.println("txReqReceive" + message);
+//		String[] kp = utils.Keys.returnKeyPair(utils.Main.keyP);
+//		
+//		sendMessage(kp[0]);
+//		
+//	}
 	private void peerReceive(String list){
 		String[] s;
 		String[] p;

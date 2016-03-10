@@ -4,32 +4,51 @@ package utils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 import miner.UnconfirmedTx;
 import peers.Peers;
+import server.BlockHandler;
 import server.NewServer;
 //loads and saves Tx chain, contains printTxArr method, start server and keyCheck
 public class Main {
 	//the transaction list
 //	public static ArrayList<Transaction> TxList = new ArrayList<Transaction>();
 	//this nodes keypair
+	public static Keys keyClass;
 	public static KeyPair keyP;
 	//this is the list of peers that this node is aware of
 	public static Peers P;
 	
 	//main method
-	public static void main(String args[]) throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException{
+	public static void main(String args[]) throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchProviderException, SignatureException{
 		
 		keyCheck();//see if private and public keys exist. if not, make some
 		
 		P = new Peers();//initialises the list of peers TO BE REPLACED WITH CENTRAL SERVER
 		
+//		String x = "catface";
+//		String modx = keyClass.privateKeySign(x);
+//		String pub = keyClass.returnPublicKey(keyP);
+//		System.out.println(x + " " +  modx + " " + " " + pub);
+//		boolean b = keyClass.verifySig(modx, pub, x);
+//		System.out.println(String.valueOf(b));
+		
+//		String s[] = keyClass.returnKeyPair(keyP);
+//		System.out.println(s[0] +"\n" + s[1]);
+		
+		
 		new BlockChain();
 		new UnconfirmedTx();
 		BlockChain.initialiseChain();
+//		new BlockHandler();
 		startServer();//starts server which contains the initialiser for UnconfirmedTxList
 
 
@@ -60,8 +79,8 @@ public class Main {
 		//if keys are present on the host machine...
 		if(f1.exists() && f2.exists()) { 
 			//load them into the program
-		    Keys keyPair = new Keys();
-		    keyP = keyPair.LoadKeyPair(Strings.FileDirectory, "DSA");
+		    keyClass = new Keys();
+		    keyP = keyClass.LoadKeyPair(Strings.FileDirectory, "DSA");
 		}
 		//if not make some key files
 		else{

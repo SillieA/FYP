@@ -13,14 +13,15 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
+import javax.swing.JOptionPane;
+
 import miner.UnconfirmedTx;
 import peers.Peers;
 import server.BlockHandler;
 import server.NewServer;
 //loads and saves Tx chain, contains printTxArr method, start server and keyCheck
 public class Main {
-	//the transaction list
-//	public static ArrayList<Transaction> TxList = new ArrayList<Transaction>();
+
 	//this nodes keypair
 	public static Keys keyClass;
 	public static KeyPair keyP;
@@ -32,7 +33,7 @@ public class Main {
 		
 		keyCheck();//see if private and public keys exist. if not, make some
 		
-		P = new Peers();//initialises the list of peers TO BE REPLACED WITH CENTRAL SERVER
+		P = new Peers();
 		
 //		String x = "catface";
 //		String modx = keyClass.privateKeySign(x);
@@ -41,9 +42,15 @@ public class Main {
 //		boolean b = keyClass.verifySig(modx, pub, x);
 //		System.out.println(String.valueOf(b));
 		
-//		String s[] = keyClass.returnKeyPair(keyP);
-//		System.out.println(s[0] +"\n" + s[1]);
-		
+		//		String s[] = keyClass.returnKeyPair(keyP);
+		//		System.out.println(s[0] +"\n" + s[1]);
+		boolean b = true;
+		while(b){
+			Strings.Role = JOptionPane.showInputDialog("Type 'Miner' or 'Node' to select network role");
+			if(Strings.Role.equals("Miner") || Strings.Role.equals("Node")){
+				b = false;
+			}
+		}
 		
 		new BlockChain();
 		new UnconfirmedTx();

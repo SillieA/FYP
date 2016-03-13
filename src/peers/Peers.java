@@ -1,11 +1,8 @@
 package peers;
 
 import java.util.HashSet;
-//replace with centralised server
 import java.util.Set;
-
-import send.Client;
-import utils.Keys;
+import send.NewClient;
 import utils.Main;
 import utils.Strings;
 
@@ -19,14 +16,19 @@ public class Peers {
 			public void run(){
 				try{
 					while(true){
-						Client c = new Client("25.47.33.74", 16789);
+						NewClient c = new NewClient("127.0.0.1", 16789);
 						try {
 							Thread.sleep(1500);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						c.sendMessage(Main.keyClass.returnPublicKey(Main.keyP));
-						c.sendMessage("TERMINATE");
+						c.sendMessage("#PER " + Main.keyClass.returnPublicKey(Main.keyP) + " " + Strings.Role);
+						try {
+							Thread.sleep(1500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						c.sendMessage(".");
 						Thread.sleep(60000);
 					}
 				}catch(Exception e){
@@ -62,6 +64,7 @@ public class Peers {
 		if(IPPK.length == 3){
 		Node p = new Node(IPPK[0],IPPK[1],IPPK[2]);
 		arr.add(p);
+		System.out.println("Peers added");
 		}
 		else{
 			System.out.println("ERROR: node info contains incorrect number of elements");

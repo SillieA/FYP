@@ -27,6 +27,7 @@ public class Strings {
 	final public static String ErrorNonceSolve = "CRITICAL ERROR: Nonce not found!";
 	
 	//words used in logic
+	public static String Role = "";
 	final public static String Genesis = "genesis";
 	final public static String PeerServerIP = "25.47.33.74";
 	final public static String Difficulty = "00000";

@@ -102,7 +102,7 @@ public class BlockChain {
 //								System.out.println("GEN");
 								line = br.readLine();
 								if (line.startsWith("@TXS")){
-									System.out.println("TXS");
+//									System.out.println("TXS");
 									TxList = new ArrayList<Transaction>();
 									line = br.readLine();
 									while(!line.isEmpty()){
@@ -141,7 +141,7 @@ public class BlockChain {
 						}
 					}
 				}catch(NullPointerException e){
-					printChain();
+//					printChain();
 
 					loop = false;
 				}

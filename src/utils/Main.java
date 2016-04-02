@@ -4,21 +4,18 @@ package utils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Writer;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
-
 import javax.swing.JOptionPane;
-
 import miner.UnconfirmedTx;
 import peers.Peers;
-import server.BlockHandler;
 import server.NewServer;
+
 //loads and saves Tx chain, contains printTxArr method, start server and keyCheck
 public class Main {
 
@@ -30,11 +27,29 @@ public class Main {
 	
 	//main method
 	public static void main(String args[]) throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchProviderException, SignatureException{
+		boolean b = true;
+		while(b){
+			Strings.Role = JOptionPane.showInputDialog("Type 'Miner' or 'Node' to select network role");
+			if(Strings.Role.equals("Miner") || Strings.Role.equals("Node")){
+				b = false;
+			}
+		}
+		keyCheck();
+//		P = new Peers();
+		new Logger();
+		new BlockChain();
+		new UnconfirmedTx();
+		BlockChain.initialiseChain();
+//		new BlockHandler();
+		startServer();//starts server which contains the initialiser for UnconfirmedTxList
 		
-		keyCheck();//see if private and public keys exist. if not, make some
-		
-		P = new Peers();
-		
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+	        public void run() {
+	            Logger.close();
+	            BlockChain.saveBlockChain();
+	        }
+	    }));
+
 //		String x = "catface";
 //		String modx = keyClass.privateKeySign(x);
 //		String pub = keyClass.returnPublicKey(keyP);
@@ -44,21 +59,6 @@ public class Main {
 		
 		//		String s[] = keyClass.returnKeyPair(keyP);
 		//		System.out.println(s[0] +"\n" + s[1]);
-		boolean b = true;
-		while(b){
-			Strings.Role = JOptionPane.showInputDialog("Type 'Miner' or 'Node' to select network role");
-			if(Strings.Role.equals("Miner") || Strings.Role.equals("Node")){
-				b = false;
-			}
-		}
-		
-		new BlockChain();
-		new UnconfirmedTx();
-		BlockChain.initialiseChain();
-//		new BlockHandler();
-		startServer();//starts server which contains the initialiser for UnconfirmedTxList
-
-
 	}
 	//starts the server to listen for connections
 	public static void startServer(){

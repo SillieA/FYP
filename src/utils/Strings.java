@@ -1,7 +1,6 @@
 package utils;
 
 import java.util.Random;
-
 import miner.ProofOfWork;
 
 public class Strings {
@@ -38,12 +37,37 @@ public class Strings {
 	final public static String TxDelim = "~";
 	final public static int ServerPort = 19996;
 	
+	//server outputs/client inputs
+	final public static String serverSendDifficulty = "SO1";
+	final public static String serverSendBlockChain = "SO2";
+
+	//client outputs/server inputs
+	final public static String clientSendBlock = "CO1";
+	final public static String clientSendTx = "CO2";
+	final public static String clientSendBlockChain = "CO3";
+	final public static String clientSendDifficulty = "CO4";
+	
+	//debug client outputs
+	final public static String clientDebug1 = "CD1";
+	final public static String clientDebug2 = "CD2";
+	final public static String clientDebug3 = "CD3";
+	final public static String clientDebug4 = "CD4";
+	final public static String clientDebug5 = "CD5";
+	
+	//debus server outputs
+	final public static String serverDebug1 = "SD1";
+	final public static String serverDebug2 = "SD2";
+	final public static String serverDebug3 = "SD3";
+	final public static String serverDebug4 = "SD4";
+	final public static String serverDebug5 = "SD5";
+	
 	//File names
 	final public static String FileBlockChain = "C:\\FYP\\BlockChain.txt";
 	final public static String FilePublicKey = "C:\\FYP\\public.key";
 	final public static String FilePrivateKey = "C:\\FYP\\private.key";
 	final public static String FileDirectory = "C:\\FYP\\";
 	final public static String FileAltChains = "C:\\FYP\\AltChain";
+	final public static String FileLogger = "C:\\FYP\\Log.txt";
 //	final public static String
 //	final public static String
 //	final public static String

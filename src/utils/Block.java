@@ -91,7 +91,6 @@ public class Block {
 		for(Transaction T : TxList){
 			UnconfirmedTx.push(T);
 		}
-		//maybe get rid of pbh?
 	}
 	//returns the values of the header other than the hash
 	public String headerValues(){

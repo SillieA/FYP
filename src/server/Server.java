@@ -20,14 +20,12 @@ public class Server{
 	private ObjectInputStream input;
 	private ServerSocket server;
 	private Socket connection;
-	public UnconfirmedTx unconfirmedTxThread;
 	private String ClientIP;
 
 	//set up and run server - called once gui is made
 	public void startRunning(int port){
 		//initialise the txpool
-		@SuppressWarnings("unused")
-		UnconfirmedTx unconfirmedTxThread = new miner.UnconfirmedTx();
+		 new UnconfirmedTx();
 		try{
 			server = new ServerSocket(port, 100);
 			while(true){

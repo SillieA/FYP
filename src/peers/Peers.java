@@ -8,6 +8,7 @@ import utils.Strings;
 
 public class Peers {
 	public static Set<Node> arr;
+	public NewClient c;
 
 	public Peers(){
 		arr = new HashSet<Node>();
@@ -16,7 +17,7 @@ public class Peers {
 			public void run(){
 				try{
 					while(true){
-						NewClient c = new NewClient("127.0.0.1", 16789);
+						syncPeers();
 						try {
 							Thread.sleep(1500);
 						} catch (InterruptedException e) {
@@ -33,6 +34,7 @@ public class Peers {
 					}
 				}catch(Exception e){
 					System.out.println("Could not connect to Peer server. Ensure server is running and restart program.");
+					e.printStackTrace();
 				}
 			}
 		};
@@ -62,12 +64,21 @@ public class Peers {
 	}
 	public static void addPeers(String[] IPPK){
 		if(IPPK.length == 3){
-		Node p = new Node(IPPK[0],IPPK[1],IPPK[2]);
-		arr.add(p);
-		System.out.println("Peers added");
+			Node p = new Node(IPPK[0],IPPK[1],IPPK[2]);
+			arr.add(p);
+			System.out.println("Peers added");
 		}
 		else{
 			System.out.println("ERROR: node info contains incorrect number of elements");
 		}
+	}
+	public void syncPeers(){
+		Runnable r = new Runnable(){
+			public void run(){
+				c = new NewClient("127.0.0.1", 16789);
+			}
+		};
+		Thread thr = new Thread(r);
+		thr.start();
 	}
 }

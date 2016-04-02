@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import send.BroadcastBlock;
 import utils.Block;
 import utils.BlockChain;
+import utils.Logger;
 import utils.Strings;
 import utils.Transaction;
 
@@ -29,12 +30,12 @@ public class BlockBuilder {
 						ArrayList<Transaction> txLista = new ArrayList<Transaction>(TxList);
 						
 						//DEBUG
-						System.out.println();
-						System.out.println("TXLISTA VALUES: ");
-						for(Transaction Tr : txLista){
-							System.out.println(Tr.values());
-						}
-						System.out.println();
+//						System.out.println();
+//						System.out.println("TXLISTA VALUES: ");
+//						for(Transaction Tr : txLista){
+//							System.out.println(Tr.values());
+//						}
+//						System.out.println();
 						//
 						String prevBlockHash = BlockChain.latestBlockHeader();
 						String merkle = Merkle.root(txLista);
@@ -43,7 +44,9 @@ public class BlockBuilder {
 						int[] difficultyNonce = ProofOfWork.find(merkle + prevBlockHash);
 						Block b = new Block(txLista, merkle,difficultyNonce[1] , prevBlockHash,difficultyNonce[0]);
 						generateRewardTx(b);
-						BroadcastBlock.Broadcast(b);
+						Logger.write(b.hashHeader + "Created!");
+						System.out.println(b.hashHeader + "Created!");
+//						BroadcastBlock.Broadcast(b);
 						//take used tx out of pool
 						if(b.hashPrevBlock.equals(BlockChain.latestBlockHeader())){
 							BlockChain.MainChain.add(b);

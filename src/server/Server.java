@@ -194,6 +194,7 @@ public class Server{
 		String[] p;
 		Set<String[]> sArr = new HashSet<String[]>();
 		s = list.split(",");
+		Peers.clear();
 		for(String str : s){
 			p = str.split(" ");
 			Peers.addPeers(p);

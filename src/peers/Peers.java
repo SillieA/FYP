@@ -1,17 +1,21 @@
 package peers;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import miner.ProofOfWork;
 import send.NewClient;
 import utils.Main;
 import utils.Strings;
 
 public class Peers {
-	public static Set<Node> arr;
+	public static List<Node> arr;
 	public NewClient c;
 
 	public Peers(){
-		arr = new HashSet<Node>();
+		arr = new ArrayList<Node>();
 
 		Runnable r = new Runnable(){
 			public void run(){
@@ -30,6 +34,7 @@ public class Peers {
 							e.printStackTrace();
 						}
 						c.sendMessage(".");
+	
 						Thread.sleep(60000);
 					}
 				}catch(Exception e){
@@ -67,6 +72,7 @@ public class Peers {
 			Node p = new Node(IPPK[0],IPPK[1],IPPK[2]);
 			arr.add(p);
 			System.out.println("Peers added");
+			printPeers();
 		}
 		else{
 			System.out.println("ERROR: node info contains incorrect number of elements");
@@ -80,5 +86,13 @@ public class Peers {
 		};
 		Thread thr = new Thread(r);
 		thr.start();
+	}
+	public static void printPeers(){
+		for(Node n : arr){
+			System.out.println(n.IP + "|" + ProofOfWork.sha256(n.PK) + "|" + n.Type );
+		}
+	}
+	public static void clear(){
+		arr.clear();
 	}
 }

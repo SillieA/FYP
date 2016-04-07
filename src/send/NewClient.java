@@ -20,9 +20,6 @@ public class NewClient {
 
 	private BufferedReader in;
 	private PrintWriter out;
-	//    private JFrame frame = new JFrame("Capitalize Client");
-	//    private JTextField dataField = new JTextField(40);
-	//    private JTextArea messageArea = new JTextArea(8, 60);
 	private Socket socket;
 
 
@@ -41,7 +38,7 @@ public class NewClient {
 
 						input = in.readLine();
 
-						System.out.println(input);
+						System.out.println(IP + ": " + input);
 						if(input.startsWith("#")){
 							int typeDelimiter = input.indexOf("#")+1;
 							String type = input.substring(typeDelimiter,typeDelimiter + 3);
@@ -57,6 +54,12 @@ public class NewClient {
 					}
 
 				}while(!input.contains("TERMINATE"));
+				System.out.println("Connection Terminated with " + IP);
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		};
 		Thread thr = new Thread(r);
@@ -78,7 +81,7 @@ public class NewClient {
 		
 	}
 	
-	//provides an interface. need to replace the strings with those defined in the Strings class
+	//provides an interface. 
 	private void caller(String code, String message){
 		switch(code){
 		case Strings.serverSendDifficulty : receiveDifficulty(message);
@@ -89,7 +92,7 @@ public class NewClient {
 		break;
 		case "BLR" : receiveBlockChain(message);
 		break;
-		case "PRE" : receivePeers(message);
+		case "PER" : receivePeers(message);
 		}
 	}
 	//inputs
@@ -104,7 +107,6 @@ public class NewClient {
 			if(!bh.containsLetters(str)){
 				difficulty += bh.blockReceive(str, true);
 			}
-			
 		}
 		if(difficulty > BlockChain.chainDifficulty()){
 			BlockChain.MainChain = new ArrayList<Block>(bh.altChain);
@@ -165,6 +167,7 @@ public class NewClient {
 	private static void receivePeers(String message){//receives a list of peers, adds them to the peer list
 		String[] s = message.split(",");
 		System.out.println(String.valueOf(s.length));
+		Peers.clear();
 		String[] k = null;
 		for(String str : s){
 			String[] ret = {"","",""};

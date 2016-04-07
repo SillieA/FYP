@@ -13,7 +13,7 @@ public class Device1 {
 				System.out.println("Device 1 started");
 				for(int i = 0; i<10000;i++){
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(150);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

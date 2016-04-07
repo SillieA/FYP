@@ -3,7 +3,6 @@ package utils;
 import java.io.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.security.*;
 import java.security.spec.*;
 
@@ -134,13 +133,6 @@ public class Keys {
 
  
 	private static String getHexString(byte[] b) {
-		String result = "";
-		for (int i = 0; i < b.length; i++) {
-			result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
-		}
-		return result;
-	}
-	private static String getHexStrings(byte[] b) {
 		String result = "";
 		for (int i = 0; i < b.length; i++) {
 			result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);

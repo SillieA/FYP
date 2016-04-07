@@ -7,10 +7,17 @@ import utils.Strings;
 
 public class BroadcastBlock {
 //send new block to all connections
-	public static void Broadcast(Block b){
+	Client c;
+	public BroadcastBlock(Block b){
+		System.out.println("Broadcasting Block");
 		for(Node p : Peers.arr){
-			NewClient c = new NewClient(p.IP, Strings.ServerPort);
-			c.sendMessage(Strings.clientSendBlock +b.allValues());
+			this.c = new Client(p.IP, Strings.ServerPort);
+			try {
+				Thread.sleep(1500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			c.sendMessage("#" + Strings.clientSendBlock + " " + b.allValues());
 		}
 	}
 }

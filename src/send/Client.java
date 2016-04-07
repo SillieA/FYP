@@ -16,7 +16,7 @@ import utils.BlockChain;
 import utils.Strings;
 import utils.Transaction;
 
-public class NewClient {
+public class Client {
 
 	private BufferedReader in;
 	private PrintWriter out;
@@ -24,7 +24,7 @@ public class NewClient {
 	private String IP;
 
 
-	public NewClient(String IP, int port) {
+	public Client(String IP, int port) {
 		this.IP = IP;
 		Runnable r = new Runnable(){
 			public void run(){
@@ -60,14 +60,13 @@ public class NewClient {
 				try {
 					socket.close();
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
 		};
 		Thread thr = new Thread(r);
-		System.out.println("Thread start");
+
 		thr.start();
-		System.out.println("Thread Made");
+
 		
 	}
 	public void connectToServer(String serverAddress, int serverPort) throws IOException {
@@ -114,7 +113,9 @@ public class NewClient {
 			BlockChain.MainChain = new ArrayList<Block>(bh.altChain);
 			bh.altChain.clear();
 		}
+		
 		bh.printChain();
+		terminateConnection();
 	}
 	private void receiveDifficulty(String message) {
 		String m[] = message.split(" ");
@@ -162,9 +163,6 @@ public class NewClient {
 	private void sendDifficulty(int difficulty){//sends local difficulty to server
 		sendMessage("#" + Strings.clientSendDifficulty + " " + String.valueOf(difficulty));
 	}
-	private void sendDifficulty(String difficulty){//sends local difficulty to server
-		sendMessage("#" + Strings.clientSendDifficulty + " " + difficulty);
-	}
 	//peers
 	private static void receivePeers(String message){//receives a list of peers, adds them to the peer list
 		String[] s = message.split(",");
@@ -197,5 +195,13 @@ public class NewClient {
 		out.println(message);
 		out.flush();
 		System.out.println("To: " + this.IP + "|");
+	}
+	public void terminateConnection(){
+		sendMessage("TERMINATE");
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

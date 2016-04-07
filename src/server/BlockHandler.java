@@ -1,17 +1,11 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import peers.Node;
-import send.NewClient;
+import send.Client;
 import utils.Block;
 import utils.BlockChain;
 import utils.Strings;
@@ -31,7 +25,7 @@ public class BlockHandler {
 	}
 
 	public ArrayList<Block> requestChain(Node p){
-		NewClient c = new NewClient(p.IP,Strings.ServerPort);
+		Client c = new Client(p.IP,Strings.ServerPort);
 		c.sendMessage("#BLR");
 		while(true){
 

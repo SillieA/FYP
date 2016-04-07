@@ -4,7 +4,6 @@ package utils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Writer;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
@@ -19,8 +18,7 @@ import devices.Device1;
 import devices.table;
 import miner.UnconfirmedTx;
 import peers.Peers;
-import send.BroadcastTx;
-import server.NewServer;
+import server.Server;
 
 //loads and saves Tx chain, contains printTxArr method, start server and keyCheck
 public class Main {
@@ -49,14 +47,14 @@ public class Main {
 		BlockChain.initialiseChain();
 		GUITest();
 		new Device1();
-		startServer();//starts server which contains the initialiser for UnconfirmedTxList
-		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 	        public void run() {
 	            Logger.close();
 	            BlockChain.saveBlockChain();
 	        }
 	    }));
+		startServer();//starts server which contains the initialiser for UnconfirmedTxList
+		
 
 //		String x = "catface";
 //		String modx = keyClass.privateKeySign(x);
@@ -87,7 +85,7 @@ public class Main {
 //		        Server host = new Server();
 //				host.startRunning(Strings.ServerPort);
 				try {
-					NewServer.initialise(Strings.ServerPort);
+					Server.initialise(Strings.ServerPort);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Set;
 
 import miner.ProofOfWork;
-import send.NewClient;
+import send.Client;
 import utils.Main;
 import utils.Strings;
 
 public class Peers {
 	public static List<Node> arr;
-	public NewClient c;
+	public Client c;
 
 	public Peers(){
 		arr = new ArrayList<Node>();
@@ -71,7 +71,6 @@ public class Peers {
 		if(IPPK.length == 3){
 			Node p = new Node(IPPK[0],IPPK[1],IPPK[2]);
 			arr.add(p);
-			printPeers();
 		}
 		else{
 			System.out.println("ERROR: Peers node info contains incorrect number of elements");
@@ -80,7 +79,7 @@ public class Peers {
 	public void syncPeers(){
 		Runnable r = new Runnable(){
 			public void run(){
-				c = new NewClient(Strings.PeerServerIP, 16789);
+				c = new Client(Strings.PeerServerIP, 16789);
 			}
 		};
 		Thread thr = new Thread(r);

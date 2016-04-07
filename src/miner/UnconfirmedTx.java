@@ -2,10 +2,8 @@ package miner;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
-import utils.BlockChain;
 import utils.Strings;
 import utils.Transaction;
 
@@ -26,7 +24,6 @@ public class UnconfirmedTx {
 				System.out.println(Strings.NoteUnconfirmedTxUp);
 				while(true){
 					if(queue.isEmpty()){
-						BlockChain.saveBlockChain();
 						try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e) {

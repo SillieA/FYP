@@ -1,203 +1,229 @@
 package server;
-
-import java.io.EOFException;
+//source : http://cs.lmu.edu/~ray/notes/javanetexamples/#capitalize
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import miner.UnconfirmedTx;
-import peers.Peers;
 import utils.Block;
 import utils.BlockChain;
+import utils.Strings;
+import utils.Transaction;
 
-public class Server{
+public class Server {
 
-	private ObjectOutputStream output;
-	private ObjectInputStream input;
-	private ServerSocket server;
-	private Socket connection;
-	private String ClientIP;
-
-	//set up and run server - called once gui is made
-	public void startRunning(int port){
-		//initialise the txpool
-		 new UnconfirmedTx();
-		try{
-			server = new ServerSocket(port, 100);
-			while(true){
-				try{
-					//wait for connection
-					waitForConnection();
-					//sets up connection
-					setupStreams();
-					//allows communication in streams
-					whileChatting();
-				}catch(EOFException eofException){
-					System.out.println("Client ended the connection!");
-				}finally{
-					closeConnection();
-				}
+	public static void initialise(int port) throws Exception {
+		System.out.println("Server is running.");
+		ServerSocket listener = new ServerSocket(port);
+		try {
+			while (true) {
+				new Connector(listener.accept()).start();
 			}
-		}catch(IOException ioException){
-			ioException.printStackTrace();
+		} finally {
+			listener.close();
 		}
 	}
-	
-	//wait for connection, then display connection information
-	private void waitForConnection() throws IOException{
-		System.out.println("Waiting for someone to connect...");
-		connection = server.accept();//creates socket when connection is made
-		ClientIP = connection.getRemoteSocketAddress().toString();
-		System.out.println("Now connected to " + ClientIP);//other persons IP address
-	}
-	
-	//get stream to send and receive data
-	private void setupStreams() throws IOException{
-		output = new ObjectOutputStream(connection.getOutputStream());
-		output.flush();
-		input = new ObjectInputStream(connection.getInputStream());
-		System.out.println("Streams setup Success!");
-	}
-	
-	//during the chat conversation
-	private void whileChatting() throws IOException{
-		String message = "Connection successful";
-		String type;
-		int typeDelimiter = 0;
-		sendMessage(message);
-		do{
-			try{
-				message = (String) input.readObject();
-				System.out.println("MESSAGE RECEIVED" + message);
-				if(message.contains("#")){
-					typeDelimiter = message.indexOf("#")+1;
-					type = message.substring(typeDelimiter,typeDelimiter + 3);
-					
-					caller(type,message);//executes code depending on hashtag
+
+	private static class Connector extends Thread {
+		private Socket socket;
+		private String clientIP;
+		private PrintWriter out;
+
+		public Connector(Socket socket) {
+			this.socket = socket;
+			this.clientIP = socket.getInetAddress().toString().substring(1);
+			System.out.println(clientIP);
+			System.out.println("New connection with client at " + socket);
+		}
+		//this method listens for the input, and processes it for the caller method
+		public void run() {
+			try {
+
+				BufferedReader in = new BufferedReader(
+						new InputStreamReader(socket.getInputStream()));
+				out = new PrintWriter(socket.getOutputStream(), true);
+
+				
+				while (true) {
+
+					String input = in.readLine();
+					System.out.println(input);
+					if (input == null || input.equals(".")) {
+						break;
+					}
+					else if(input.equals("debug")){
+						for(int i =0; i<100000;i++){
+							caller(Strings.clientSendTx," 0 test test " + String.valueOf(i) + " test");
+						}
+					}
+					else if(input.contains("#")){
+						int typeDelimiter = input.indexOf("#")+1;
+						String type = input.substring(typeDelimiter,typeDelimiter + 3);
+						try{
+							String message = input.substring(typeDelimiter + 4);
+							caller(type,message);//executes code depending on hashtag
+						}catch(StringIndexOutOfBoundsException e){
+							caller(type,null);
+						}
+					}
 				}
-				else if(message.contains("SHUTDOWN SERVER")){
-					sendMessage("TERMINATE");
-					closeConnection();
-					
+			} catch (IOException e) {
+			} finally {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					System.out.println("Couldn't close a socket, what's going on?");
 				}
-			}catch(ClassNotFoundException classNotFoundException){
-				System.out.println("unknown class (Server) ");
-			}catch(Exception e){
-				break;
+				System.out.println("Connection: " + clientIP + " closed");
+			}
+		}
+		public void caller(String code, String message){
+			switch(code){
+			
+			case Strings.clientSendBlock : blockReceive(message);
+			break;
+			case Strings.clientSendTx : txPoolReceive(message);//transaction transmission received
+			break;
+			case Strings.clientSendBlockChain : blockchainReceive(message);//block transmission received
+			break;
+			case Strings.clientSendDifficulty : difficultyReceive(message);
+			break;
+			
+
+			//Debug
+			case "DEB" : BlockChain.printChain();//debug: prints chain in terminal
+			break;
+			case "SAV" : BlockChain.saveBlockChain();//save chain to file
+			break;
+			case "SBC" : sendBlockChain();//send blockchain
+			break;
+			}
+		}
+		//inputs
+		//CO1
+		private void blockReceive(String message){//process for receiving a block
+			System.out.println("CO1 called");
+			int difficulty;
+			BlockHandler bh = new BlockHandler();
+			difficulty = bh.blockReceive(message,true);
+			if(difficulty == -1){
+				terminateConnection();
+			}
+			else{
+				sendMessage("#" + Strings.serverSendDifficulty + " " + String.valueOf(difficulty));
 			}
 			
-		}while(!message.contains("TERMINATE"));
-	}
-	
-	//close streams and sockets after connection is terminated
-	private void closeConnection(){
-		try{
-			output.close();
-			input.close();
-			connection.close();//closes socket
-		}catch(IOException ioException){
-			ioException.printStackTrace();
 		}
-	}	
-	
-	//send a message to client
-	private void sendMessage(String message){
-		try{
-			output.writeObject(message);
-			output.flush();
-			System.out.println(message);
-		}catch(IOException ioException){
-			System.out.println("Message not sert (Server)");
-		}
-	}
-	//sorts out the different 'input' requests. 
-	//TRE = client informing that they are sending you money so you can send public key. returns public key.
-	//BLK = Receiving new block from client UNFINISHED
-	//TPO = new transaction for pool. takes 5 inputs. NULL FROMpubkey TOpubkey TOKEN REFTX
-	//DEB = Displays blockchain in console
-	//SAV = saves blockchain to file
-	private void caller(String code, String message){
-		switch(code){
-//		case "TRE" : txReqReceive(message);
-//		break;
-		case "BLK" : blockReceive(message);//block transmission received
-		break;
-		case "TPO" : txPoolReceive(message);//transaction transmission received
-		break;
-		case "PER" : peerReceive(message);//receive peer list from peer server
-		break;
-		case "DEB" : BlockChain.printChain();//debug: prints chain in terminal
-		break;
-		case "SAV" : BlockChain.saveBlockChain();//save chain to file
-		break;
-		case "BLR" : sendBlockChain();//send blockchain
-		}
-	}
-	private void sendBlockChain(){
-		String s = "";
-		for(Block b : BlockChain.MainChain){
-			s += " | " + " + " + b.headerValues() + " + " + " - " + b.metaValues() + " - " + " ~ " + b.txValuesNoNewLine() + " ~ ";
-		}
-		sendMessage(s);
-	}
-	private void blockReceive(String m) {
-		String message = m.substring(4);
-		String[] Blocks = message.split("##");
-		for(String str : Blocks){
-			System.out.println(str);
-		}
-		for(String str : Blocks){
-//			if(!BlockHandler.containsLetters(str)){
-//				BlockHandler.blockReceive(str);
-//			}
-		}
-//		BlockHandler.printChain();
-//		BlockHandler.altChain.clear();
-	}
-
-	//new tx for txpool
-	private void txPoolReceive(String message) {
-		System.out.println("TxpoolReceive " + message);
-		utils.Transaction T = new utils.Transaction();
-		try{
-			int delimiter = message.indexOf("#")+5;//gets position immediately after #REQ
-			String tx = message.substring(delimiter);
-
-			String[] txVal = tx.split(" ");//split at the spaces
+		//CO2
+		private void txPoolReceive(String message) {//process for receiving transaction
+			System.out.println("CO2 called");
+			System.out.println("CO2: TxpoolReceive " + message);
+			Transaction T = new Transaction();
 			try{
-				T.write(txVal[0],txVal[1],txVal[2],txVal[3],txVal[4]);//make 5 words into new tx
-				UnconfirmedTx.push(T);
-			}catch(ArrayIndexOutOfBoundsException e){
-				System.out.println("Error with Tx parameters from " + ClientIP);
+
+				String[] txVal = message.split(" ");//split at the spaces
+
+				try{
+					T.write(txVal[0],txVal[1],txVal[2],txVal[3],txVal[4]);//make 5 words into new tx
+					T.generateReference();
+//					if(Validation.checkTx(T) == true){
+						UnconfirmedTx.push(T);
+//					}
+//					else{
+//						System.out.println("TX not valid");
+//					}
+				}catch(ArrayIndexOutOfBoundsException e){
+					System.out.println("Error with Tx parameters");
+				}
+
+			}catch(Exception e){
+				System.out.println("error : empty TxPool message");
+				e.printStackTrace();
 			}
+			terminateConnection();
 
-		}catch(Exception e){
-			System.out.println("error : empty TxPool message");
-			e.printStackTrace();
 		}
-
-	}
-	//returns public key when informed of inbound transaction
-//	private void txReqReceive(String message){
-//		System.out.println("txReqReceive" + message);
-//		String[] kp = utils.Keys.returnKeyPair(utils.Main.keyP);
-//		
-//		sendMessage(kp[0]);
-//		
-//	}
-	private void peerReceive(String list){
-		String[] s;
-		String[] p;
-		Set<String[]> sArr = new HashSet<String[]>();
-		s = list.split(",");
-		Peers.clear();
-		for(String str : s){
-			p = str.split(" ");
-			Peers.addPeers(p);
+	
+		//CO3
+		private void blockchainReceive(String message) {//process for receiving blockchain
+			System.out.println("CO3 called");
+			BlockHandler bh = new BlockHandler();
+			int difficulty = 0;
+			String[] Blocks = message.split(Strings.BlockDelim);
+			for(String str : Blocks){
+				System.out.println(str);
+			}
+			for(String str : Blocks){
+				if(!bh.containsLetters(str)){
+					difficulty += bh.blockReceive(str,true);
+				}
+				
+			}
+			if(difficulty > BlockChain.chainDifficulty()){
+				BlockChain.MainChain = new ArrayList<Block>(bh.altChain);
+				bh.altChain.clear();
+			}
+			bh.printChain();
+			terminateConnection();
+		}
+		
+		//CO4
+		private void difficultyReceive(String message){
+			System.out.println("CO4 called");
+			String m[] = message.split(" ");
+			int inputNumber = 0;
+			int currentDifficulty;
+			boolean containsNumber = false;
+			for(String s : m){
+				if(s.matches(".*\\d+.*") && containsNumber == false){//checks for integers. if there is more than one section with integers, some sort of error has occurred
+					containsNumber = true;
+					inputNumber = Integer.parseInt(s);
+				}
+				else if (containsNumber == true){
+					System.out.println("Error : difficulty input not recognised!");
+				}
+			}
+			currentDifficulty = BlockChain.chainDifficulty();
+			if(currentDifficulty > inputNumber){
+				sendBlockChain();
+			}
+			else if(currentDifficulty < inputNumber){
+				sendDifficulty(currentDifficulty);
+			}
+			
+		}	
+		//outputs
+		//SO1
+		private void sendDifficulty(int currentDifficulty){
+			sendMessage("#" + Strings.serverSendDifficulty + " " + String.valueOf(currentDifficulty));
+		}
+		//SO2
+		private void sendBlockChain(){//send blockchain
+			String s = "";
+			
+			for(Block b : BlockChain.MainChain){
+				s += Strings.BlockDelim + Strings.HeadDelim + " " + b.headerValues() + Strings.HeadDelim + " " + Strings.MetaDelim + " " + b.metaValues() + Strings.MetaDelim + " " + Strings.GenDelim + " " + b.gen.values() + Strings.GenDelim + Strings.TxDelim + " " + b.txValuesNoNewLine() + Strings.TxDelim + " ";
+			}
+			s += Strings.BlockDelim;
+			sendMessage("#" + Strings.serverSendBlockChain + " " + s);
+			terminateConnection();
+		}
+		//utils
+		public void sendMessage(String message){
+			out.println(message);
+			out.flush();
+		}
+		public void terminateConnection(){
+			sendMessage("TERMINATE");
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

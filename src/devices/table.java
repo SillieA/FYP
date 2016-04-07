@@ -2,7 +2,6 @@ package devices;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -13,13 +12,18 @@ import utils.BlockChain;
 
 public class table extends JFrame {
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1780474438396658030L;
 	JTable table;
 
 	public table() {
 		Thread t = new Thread() {
 			public void run() {
 				while(true){
-					for(int i = BlockChain.MainChain.size();i>=0;i++){
+					for(int i = BlockChain.MainChain.size()-1;i>=0;i--){
 						Block b = BlockChain.MainChain.get(i);
 						setLayout(new FlowLayout());
 

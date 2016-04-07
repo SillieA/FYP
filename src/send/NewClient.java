@@ -21,9 +21,11 @@ public class NewClient {
 	private BufferedReader in;
 	private PrintWriter out;
 	private Socket socket;
+	private String IP;
 
 
 	public NewClient(String IP, int port) {
+		this.IP = IP;
 		Runnable r = new Runnable(){
 			public void run(){
 				try {
@@ -194,5 +196,6 @@ public class NewClient {
 	public void sendMessage(String message){
 		out.println(message);
 		out.flush();
+		System.out.println("To: " + this.IP + "|");
 	}
 }

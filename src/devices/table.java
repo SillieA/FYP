@@ -19,7 +19,8 @@ public class table extends JFrame {
 		Thread t = new Thread() {
 			public void run() {
 				while(true){
-					for(Block b : BlockChain.MainChain){
+					for(int i = BlockChain.MainChain.size();i>=0;i++){
+						Block b = BlockChain.MainChain.get(i);
 						setLayout(new FlowLayout());
 
 						String[] columnNames = {"type","value" };

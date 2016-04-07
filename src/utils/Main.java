@@ -15,6 +15,7 @@ import java.security.spec.InvalidKeySpecException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import devices.Device1;
 import devices.table;
 import miner.UnconfirmedTx;
 import peers.Peers;
@@ -47,6 +48,7 @@ public class Main {
 		new UnconfirmedTx();
 		BlockChain.initialiseChain();
 		GUITest();
+		new Device1();
 		startServer();//starts server which contains the initialiser for UnconfirmedTxList
 		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

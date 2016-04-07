@@ -71,17 +71,16 @@ public class Peers {
 		if(IPPK.length == 3){
 			Node p = new Node(IPPK[0],IPPK[1],IPPK[2]);
 			arr.add(p);
-			System.out.println("Peers added");
 			printPeers();
 		}
 		else{
-			System.out.println("ERROR: node info contains incorrect number of elements");
+			System.out.println("ERROR: Peers node info contains incorrect number of elements");
 		}
 	}
 	public void syncPeers(){
 		Runnable r = new Runnable(){
 			public void run(){
-				c = new NewClient("127.0.0.1", 16789);
+				c = new NewClient(Strings.PeerServerIP, 16789);
 			}
 		};
 		Thread thr = new Thread(r);

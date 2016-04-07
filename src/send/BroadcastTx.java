@@ -6,7 +6,7 @@ import utils.Strings;
 import utils.Transaction;
 
 public class BroadcastTx {
-//sends Tx to every peer on the network
+	//sends Tx to every peer on the network
 //	public BroadcastTx(Transaction T){
 //		String TxString = T.values();
 //		for(Node p : Peers.arr){
@@ -20,19 +20,27 @@ public class BroadcastTx {
 //			}
 //		}
 //	}
+	private String s;
+	private NewClient C;
 	public BroadcastTx(Transaction T){
 		try{
-			NewClient C = new NewClient("127.0.0.1", 19996);
-			System.out.println("Sleep Start");
-			Thread.sleep(2000);
-			System.out.println("Sleep Fin");
-			C.sendMessage("#" + Strings.clientSendTx + " " + T.values());
-			C.sendMessage("TERMINATE");
-			System.out.println("Message sent");
-			
+			for(String str : Peers.getIPs()){
+				this.s = str;
+				C = new NewClient(s, 19996);
+				try {
+					Thread.sleep(1500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				C.sendMessage("#" + Strings.clientSendTx + " " + T.values());
+				C.sendMessage("TERMINATE");
+				System.out.println("Message sent");
+			}
 		}
 		catch(Exception e){
-			System.out.println(e.toString());
+			e.printStackTrace();
+			System.out.println("Error connecting to " + s);
 		}
 	}
 }

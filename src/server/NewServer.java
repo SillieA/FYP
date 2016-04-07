@@ -53,8 +53,7 @@ public class NewServer {
 				
 				while (true) {
 					System.out.println("CALLED2");
-//					String input = in.readLine();
-					String input = JOptionPane.showInputDialog("#CO1 - send block, #CO2 - send tx, #CO3 - send blockchain, #CO4 - send Difficulty");
+					String input = in.readLine();
 					System.out.println(input);
 					if (input == null || input.equals(".")) {
 						break;
@@ -114,11 +113,12 @@ public class NewServer {
 			System.out.println("CO1 called");
 			BlockHandler bh = new BlockHandler();
 			bh.blockReceive(message,true);
+			terminateConnection();
 		}
 		//CO2
 		private void txPoolReceive(String message) {//process for receiving transaction
 			System.out.println("CO2 called");
-			System.out.println("TxpoolReceive " + message);
+			System.out.println("CO2: TxpoolReceive " + message);
 			Transaction T = new Transaction();
 			try{
 
@@ -141,6 +141,7 @@ public class NewServer {
 				System.out.println("error : empty TxPool message");
 				e.printStackTrace();
 			}
+			terminateConnection();
 
 		}
 	
@@ -164,6 +165,7 @@ public class NewServer {
 				bh.altChain.clear();
 			}
 			bh.printChain();
+			terminateConnection();
 		}
 		
 		//CO4
@@ -191,6 +193,14 @@ public class NewServer {
 		public void sendMessage(String message){
 			out.println(message);
 			out.flush();
+		}
+		public void terminateConnection(){
+			sendMessage("TERMINATE");
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

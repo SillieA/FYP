@@ -6,8 +6,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import miner.UnconfirmedTx;
+import miner.Validation;
 import utils.Block;
 import utils.BlockChain;
 import utils.Strings;
@@ -38,20 +42,27 @@ public class NewServer {
 			System.out.println(clientIP);
 			System.out.println("New connection with client at " + socket);
 		}
-
+		//this method listens for the input, and processes it for the caller method
 		public void run() {
 			try {
-
+				System.out.println("CALLED");
 				BufferedReader in = new BufferedReader(
 						new InputStreamReader(socket.getInputStream()));
 				out = new PrintWriter(socket.getOutputStream(), true);
 
-
+				
 				while (true) {
-					String input = in.readLine();
+					System.out.println("CALLED2");
+//					String input = in.readLine();
+					String input = JOptionPane.showInputDialog("#CO1 - send block, #CO2 - send tx, #CO3 - send blockchain, #CO4 - send Difficulty");
 					System.out.println(input);
 					if (input == null || input.equals(".")) {
 						break;
+					}
+					else if(input.equals("debug")){
+						for(int i =0; i<100000;i++){
+							caller(Strings.clientSendTx," 0 test test " + String.valueOf(i) + " test");
+						}
 					}
 					else if(input.contains("#")){
 						int typeDelimiter = input.indexOf("#")+1;
@@ -63,7 +74,6 @@ public class NewServer {
 							caller(type,null);
 						}
 					}
-					out.println(input.toUpperCase());
 				}
 			} catch (IOException e) {
 				System.out.println("Error handling client# " + clientIP + ": " + e);
@@ -76,58 +86,44 @@ public class NewServer {
 				System.out.println("Connection with client# " + clientIP + " closed");
 			}
 		}
-		private void caller(String code, String message){
+		public void caller(String code, String message){
 			switch(code){
-			case Strings.clientSendBlockChain : blockchainReceive(message);//block transmission received
-			break;
-			case "SBC" : sendBlockChain();//send blockchain
-			break;
+			
 			case Strings.clientSendBlock : blockReceive(message);
-			break;
-			case Strings.clientSendDifficulty : difficultyReceive(message);
 			break;
 			case Strings.clientSendTx : txPoolReceive(message);//transaction transmission received
 			break;
+			case Strings.clientSendBlockChain : blockchainReceive(message);//block transmission received
+			break;
+			case Strings.clientSendDifficulty : difficultyReceive(message);
+			break;
+			
 
 			//Debug
 			case "DEB" : BlockChain.printChain();//debug: prints chain in terminal
 			break;
-			case "ADB" : BlockHandler.printChains();
-			break;
 			case "SAV" : BlockChain.saveBlockChain();//save chain to file
 			break;
+			case "SBC" : sendBlockChain();//send blockchain
+			break;
 			}
 		}
-		
-		private void sendBlockChain(){//send blockchain
-			String s = "";
-			for(Block b : BlockChain.MainChain){
-				s += Strings.BlockDelim + Strings.HeadDelim + " " + b.headerValues() + Strings.HeadDelim + " " + Strings.MetaDelim + " " + b.metaValues() + Strings.MetaDelim + " " + Strings.GenDelim + " " + b.gen.values() + Strings.GenDelim + Strings.TxDelim + " " + b.txValuesNoNewLine() + Strings.TxDelim + " ";
-			}
-			s += Strings.BlockDelim;
-			out.println("#BLR " + s);
+		//inputs
+		//CO1
+		private void blockReceive(String message){//process for receiving a block
+			System.out.println("CO1 called");
+			BlockHandler bh = new BlockHandler();
+			bh.blockReceive(message,true);
 		}
-		private void blockchainReceive(String m) {//process for receiving blockchain
-			String[] Blocks = m.split(Strings.BlockDelim);
-			for(String str : Blocks){
-				System.out.println(str);
-			}
-			for(String str : Blocks){
-				if(!BlockHandler.containsLetters(str)){
-					BlockHandler.blockReceive(str);
-				}
-			}
-			BlockHandler.printChains();
-		}
+		//CO2
 		private void txPoolReceive(String message) {//process for receiving transaction
+			System.out.println("CO2 called");
 			System.out.println("TxpoolReceive " + message);
 			Transaction T = new Transaction();
 			try{
 
 				String[] txVal = message.split(" ");//split at the spaces
-				//				for(String asdf : txVal){
-				//					System.out.println(asdf);
-				//				}
+
 				try{
 					T.write(txVal[0],txVal[1],txVal[2],txVal[3],txVal[4]);//make 5 words into new tx
 					T.generateReference();
@@ -138,7 +134,7 @@ public class NewServer {
 //						System.out.println("TX not valid");
 //					}
 				}catch(ArrayIndexOutOfBoundsException e){
-					System.out.println("Error with Tx parameters from ");
+					System.out.println("Error with Tx parameters");
 				}
 
 			}catch(Exception e){
@@ -147,11 +143,54 @@ public class NewServer {
 			}
 
 		}
-		private void blockReceive(String message){//process for receiving a block
-			
+	
+		//CO3
+		private void blockchainReceive(String message) {//process for receiving blockchain
+			System.out.println("CO3 called");
+			BlockHandler bh = new BlockHandler();
+			int difficulty = 0;
+			String[] Blocks = message.split(Strings.BlockDelim);
+			for(String str : Blocks){
+				System.out.println(str);
+			}
+			for(String str : Blocks){
+				if(!bh.containsLetters(str)){
+					difficulty += bh.blockReceive(str,true);
+				}
+				
+			}
+			if(difficulty > BlockChain.chainDifficulty()){
+				BlockChain.MainChain = new ArrayList<Block>(bh.altChain);
+				bh.altChain.clear();
+			}
+			bh.printChain();
 		}
+		
+		//CO4
 		private void difficultyReceive(String message){
+			System.out.println("CO4 called");
 			
+			
+		}	
+		//outputs
+		//SO1
+		private void sendDifficulty(){
+			sendMessage("#" + Strings.serverSendDifficulty + " " + BlockChain.chainDifficulty());
+		}
+		//SO2
+		private void sendBlockChain(){//send blockchain
+			String s = "";
+			
+			for(Block b : BlockChain.MainChain){
+				s += Strings.BlockDelim + Strings.HeadDelim + " " + b.headerValues() + Strings.HeadDelim + " " + Strings.MetaDelim + " " + b.metaValues() + Strings.MetaDelim + " " + Strings.GenDelim + " " + b.gen.values() + Strings.GenDelim + Strings.TxDelim + " " + b.txValuesNoNewLine() + Strings.TxDelim + " ";
+			}
+			s += Strings.BlockDelim;
+			sendMessage("#" + Strings.serverSendBlockChain + " " + s);
+		}
+		//utils
+		public void sendMessage(String message){
+			out.println(message);
+			out.flush();
 		}
 	}
 }

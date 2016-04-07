@@ -151,9 +151,9 @@ public class Server{
 			System.out.println(str);
 		}
 		for(String str : Blocks){
-			if(!BlockHandler.containsLetters(str)){
-				BlockHandler.blockReceive(str);
-			}
+//			if(!BlockHandler.containsLetters(str)){
+//				BlockHandler.blockReceive(str);
+//			}
 		}
 //		BlockHandler.printChain();
 //		BlockHandler.altChain.clear();

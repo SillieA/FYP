@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class BlockChain {
@@ -24,6 +25,15 @@ public class BlockChain {
 			GenesisBlock.checkBlockChain();
 		}
 	}
+	public static int chainDifficulty(){
+		int dif = 0;
+		int temp;
+		for(int i = 0; i < MainChain.size(); i++){
+			temp = MainChain.get(i).difficulty;
+			dif += temp;
+		}
+		return dif;
+	}
 	
 	public static void printChain(){
 		for(int i = 0; i < MainChain.size(); i++){
@@ -36,6 +46,16 @@ public class BlockChain {
 			s += "##" + MainChain.get(i).allValues();
 		}
 		return s;
+	}
+	public static String[] getHeaders(){
+		List<String> headers = new ArrayList<String>(MainChain.size());
+		String[] ret;
+		for(Block b : MainChain){
+			headers.add(b.hashHeader);
+		}
+		ret = new String[headers.size()];
+		ret = headers.toArray(ret);
+		return ret;
 	}
 
 	public static String latestBlockHeader(){

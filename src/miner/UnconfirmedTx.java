@@ -1,7 +1,9 @@
 package miner;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 import utils.Strings;
 import utils.Transaction;
@@ -9,13 +11,13 @@ import utils.Transaction;
 public class UnconfirmedTx {
 	//whenever a broadcast is received, add it to the queue
 	
-	private static PriorityQueue<Transaction> queue;
+	private static Queue<Transaction> queue;
 	public Runnable r;
 
 	public UnconfirmedTx() 
 	{
 
-		queue = new PriorityQueue<Transaction>();
+		queue = new LinkedList<Transaction>();
 		BlockBuilder c = new BlockBuilder();
 		
 		r = new Runnable(){
@@ -44,5 +46,8 @@ public class UnconfirmedTx {
 	}
 	public static void push(Transaction T){
 		queue.add(T);
+	}
+	public static ArrayList<Transaction> getCopy(){
+		return new ArrayList<Transaction>(queue);
 	}
 }

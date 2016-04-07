@@ -9,7 +9,7 @@ public class BroadcastBlock {
 //send new block to all connections
 	public static void Broadcast(Block b){
 		for(Node p : Peers.arr){
-			Client c = new Client(p.IP, Strings.ServerPort);
+			NewClient c = new NewClient(p.IP, Strings.ServerPort);
 			c.sendMessage(Strings.clientSendBlock +b.allValues());
 		}
 	}

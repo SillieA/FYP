@@ -22,9 +22,11 @@ public class BroadcastTx {
 //	}
 	public BroadcastTx(Transaction T){
 		try{
-			Client C = new Client("25.47.156.0", 19996);
+			NewClient C = new NewClient("127.0.0.1", 19996);
+			System.out.println("Sleep Start");
 			Thread.sleep(2000);
-			C.sendMessage(Strings.clientSendTx + " " + T.values());
+			System.out.println("Sleep Fin");
+			C.sendMessage("#" + Strings.clientSendTx + " " + T.values());
 			C.sendMessage("TERMINATE");
 			System.out.println("Message sent");
 			

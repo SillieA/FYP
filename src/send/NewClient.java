@@ -10,17 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import peers.Peers;
+import server.BlockHandler;
 import utils.Block;
 import utils.BlockChain;
 import utils.Strings;
+import utils.Transaction;
 
-
-/**
- * A simple Swing-based client for the capitalization server.
- * It has a main frame window with a text field for entering
- * strings and a textarea to see the results of capitalizing
- * them.
- */
 public class NewClient {
 
 	private BufferedReader in;
@@ -30,11 +25,7 @@ public class NewClient {
 	//    private JTextArea messageArea = new JTextArea(8, 60);
 	private Socket socket;
 
-	/**
-	 * Constructs the client by laying out the GUI and registering a
-	 * listener with the textfield so that pressing Enter in the
-	 * listener sends the textfield contents to the server.
-	 */
+
 	public NewClient(String IP, int port) {
 		Runnable r = new Runnable(){
 			public void run(){
@@ -61,7 +52,7 @@ public class NewClient {
 								caller(type,null);
 							}
 						}
-					} catch (IOException e1) {
+					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 
@@ -69,8 +60,10 @@ public class NewClient {
 			}
 		};
 		Thread thr = new Thread(r);
+		System.out.println("Thread start");
 		thr.start();
-
+		System.out.println("Thread Made");
+		
 	}
 	public void connectToServer(String serverAddress, int serverPort) throws IOException {
 
@@ -88,26 +81,71 @@ public class NewClient {
 	//provides an interface. need to replace the strings with those defined in the Strings class
 	private void caller(String code, String message){
 		switch(code){
-		case "BLK" : readInBlock(message);; 
+		case Strings.serverSendDifficulty : receiveDifficulty(message);
+		break;
+		case Strings.serverSendBlockChain : receiveBlockChain(message);
 		break;
 		case "BLS" : sendBlockChain();
 		break;
 		case "BLR" : receiveBlockChain(message);
 		break;
-		case "RDF" : compareDifficulty(message);
-		break;
 		case "PRE" : receivePeers(message);
 		}
 	}
+	//inputs
 	private void receiveBlockChain(String message) {
-		
+		BlockHandler bh = new BlockHandler();
+		int difficulty = 0;
+		String[] Blocks = message.split(Strings.BlockDelim);
+		for(String str : Blocks){
+			System.out.println(str);
+		}
+		for(String str : Blocks){
+			if(!bh.containsLetters(str)){
+				difficulty += bh.blockReceive(str, true);
+			}
+			
+		}
+		if(difficulty > BlockChain.chainDifficulty()){
+			BlockChain.MainChain = new ArrayList<Block>(bh.altChain);
+			bh.altChain.clear();
+		}
+		bh.printChain();
 	}
-	private void readInBlock(String message){//called when 
-
+	private void receiveDifficulty(String message) {
+		String m[] = message.split(" ");
+		int inputNumber = 0;
+		int currentDifficulty;
+		boolean containsNumber = false;
+		for(String s : m){
+			if(s.matches(".*\\d+.*") && containsNumber == false){//checks for integers. if there is more than one section with integers, some sort of error has occurred
+				containsNumber = true;
+				inputNumber = Integer.parseInt(s);
+			}
+			else if (containsNumber == true){
+				System.out.println("Error : difficulty input not recognised!");
+			}
+		}
+		currentDifficulty = BlockChain.chainDifficulty();
+		if(currentDifficulty > inputNumber){
+			sendBlockChain();
+		}
+		else if(currentDifficulty < inputNumber){
+			sendDifficulty(currentDifficulty);
+		}
 	}
-	private void compareDifficulty(String message){//compares difficulty of local blockchain to server blockchain
-
+	//outputs
+	//CO1
+	public void sendBlock(Block b){
+		String message = b.valuesDelimited();
+		sendMessage("#" + Strings.clientSendBlock + " " + message);
 	}
+	//CO2
+	public void sendTx(Transaction T){
+		String message = T.values();
+		sendMessage("#" + Strings.clientSendTx + " " + message); 
+	}
+	//CO3
 	private void sendBlockChain(){//sends current blockchain
 		String s = "";
 		for(Block b : BlockChain.MainChain){
@@ -116,6 +154,14 @@ public class NewClient {
 		s += Strings.BlockDelim;
 		out.println("#BLR " + s);
 	}
+	//CO4
+	private void sendDifficulty(int difficulty){//sends local difficulty to server
+		sendMessage("#" + Strings.clientSendDifficulty + " " + String.valueOf(difficulty));
+	}
+	private void sendDifficulty(String difficulty){//sends local difficulty to server
+		sendMessage("#" + Strings.clientSendDifficulty + " " + difficulty);
+	}
+	//peers
 	private static void receivePeers(String message){//receives a list of peers, adds them to the peer list
 		String[] s = message.split(",");
 		System.out.println(String.valueOf(s.length));
@@ -136,6 +182,7 @@ public class NewClient {
 			}
 		}
 	}
+	//utility
 	static String[] removeBlanks(String[] input){//removes all blank elements of the array
 		List<String> list = new ArrayList<String>(Arrays.asList(input));
 		list.removeAll(Arrays.asList("", null));

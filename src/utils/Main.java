@@ -11,9 +11,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
+
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import devices.table;
 import miner.UnconfirmedTx;
 import peers.Peers;
+import send.BroadcastTx;
 import server.NewServer;
 
 //loads and saves Tx chain, contains printTxArr method, start server and keyCheck
@@ -36,11 +41,12 @@ public class Main {
 		}
 		keyCheck();
 //		P = new Peers();
+//		new BroadcastTx(new Transaction("1","2","3","4","5"));
 		new Logger();
 		new BlockChain();
 		new UnconfirmedTx();
 		BlockChain.initialiseChain();
-//		new BlockHandler();
+		GUITest();
 		startServer();//starts server which contains the initialiser for UnconfirmedTxList
 		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -61,6 +67,17 @@ public class Main {
 		//		System.out.println(s[0] +"\n" + s[1]);
 	}
 	//starts the server to listen for connections
+	public static void GUITest(){
+
+		System.out.println("table thread started");
+		table gui = new table();
+		gui.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		gui.setSize(800,400);
+		gui.setVisible(true);
+		gui.setTitle("table");
+
+
+	}
 	public static void startServer(){
 		Thread t = new Thread() {
 		    public void run() {

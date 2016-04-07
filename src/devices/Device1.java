@@ -1,18 +1,31 @@
 package devices;
 
-import peers.Peers;
+import miner.UnconfirmedTx;
 import send.BroadcastTx;
-import send.NewClient;
 import utils.Main;
 import utils.Transaction;
 
 public class Device1 {
 	public Device1(){
-		for(int i = 0; i>10000;i++){
-			Transaction T = new Transaction(null, Main.keyClass.returnPublicKey(Main.keyP),null,null,null);
-			new BroadcastTx(T);
-			
-		}
+		Thread t = new Thread(){
+			public void run(){
+				for(int i = 0; i>10000;i++){
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					Transaction T = new Transaction(null, Main.keyClass.returnPublicKey(Main.keyP),null,null,null);
+					T.generateReference();
+					new BroadcastTx(T);
+					UnconfirmedTx.push(T);
+				}
+			}
+
+		};
+		t.start();
+
+
 	}
 
 }

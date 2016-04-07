@@ -1,5 +1,11 @@
 package utils;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+
 import miner.ProofOfWork;
 
 public class Transaction {
@@ -45,7 +51,20 @@ public class Transaction {
 		return s;
 	}
 	public void generateReference(){
-		TxNumber = ProofOfWork.sha256(valuesNoSpace());
+		String hash = ProofOfWork.sha256(valuesNoSpace());
+		try {
+			TxNumber = Main.keyClass.privateKeySign(hash);
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			e.printStackTrace();
+		} catch (SignatureException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

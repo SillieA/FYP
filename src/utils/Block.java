@@ -1,5 +1,6 @@
 package utils;
 import java.util.ArrayList;
+import java.util.List;
 
 import miner.UnconfirmedTx;
 import miner.ProofOfWork;
@@ -24,7 +25,7 @@ public class Block {
 		//for the header
 		hashPrevBlock = Header[0];
 		hashMerkleRoot = Header[1];
-		System.out.println(String.valueOf(Header[2]));
+//		System.out.println(String.valueOf(Header[2]));
 		time = Long.valueOf(Header[2]);
 		Nonce = Integer.valueOf(Header[3]);
 		//for the txs
@@ -51,6 +52,45 @@ public class Block {
 		key = Main.keyClass.returnPublicKey(Main.keyP);
 		rewardTx(Strings.rewards());
 	}
+	public String[][] valuesArr(){
+		List<String> values = new ArrayList<String>();
+		List<String> type = new ArrayList<String>();
+		String[] txVals;
+		String[][] ret;
+		values.add(this.hashPrevBlock);
+		type.add("PBH");
+		values.add(this.hashMerkleRoot);
+		type.add("MRH");
+		values.add(String.valueOf(this.time));
+		type.add("TIME");
+		values.add(String.valueOf(this.Nonce));
+		type.add("NONCE");
+		values.add(this.hashHeader);
+		type.add("HEAD");
+		values.add(String.valueOf(this.TxCount));
+		type.add("TXCNT");
+		values.add(String.valueOf(this.difficulty));
+		type.add("DIF");
+		values.add(ProofOfWork.sha256(this.key));
+		type.add("KEY");
+		for(Transaction T : this.TxList){
+			txVals = T.valuesArr();
+			int i = 0;
+			for(String s : txVals){
+				values.add(s);
+				type.add("Tx" + String.valueOf(i));
+				i++;
+			}
+			i = 0;
+		}
+		int size = type.size();
+		ret = new String[size][2];
+		for(int j = 0; j < size; j++){
+			ret[j][0] = type.get(j);
+			ret[j][1] = values.get(j);
+		}
+		return ret;
+	}
 	//creates reward tokens for miner
 	public void rewardTx(String token){
 		//number
@@ -71,11 +111,11 @@ public class Block {
 		
 		return Header + Meta + Gen + Transactions ;
 	}
-	public String valuesForSending(){
-		String Header = " + " +  headerValues() +  " + ";//returns the values of the header
-		String Meta = " - " + metaValues() + " - ";
-		String Gen = " * " + generatedTxValues() + " * ";
-		String Transactions = " ~ " + txValues() + " ~ ";
+	public String valuesDelimited(){
+		String Header = " " + Strings.HeadDelim + " " + headerValues() +  " " + Strings.HeadDelim + " ";//returns the values of the header
+		String Meta = " " + Strings.MetaDelim + " " + metaValues() + " " + Strings.MetaDelim + " ";
+		String Gen = " " + Strings.GenDelim + " " + generatedTxValues() + " " + Strings.GenDelim + " ";
+		String Transactions = " " + Strings.TxDelim + " " + txValues() + " " + Strings.TxDelim + " ";
 		
 		return Header + Meta + Gen + Transactions;
 	}
@@ -114,9 +154,7 @@ public class Block {
 				ans += TxList.get(i).values() + "\r\n";
 			}
 		}
-//		for(Transaction T : TxList){
-//			ans += T.values() + "\r\n";
-//		}
+
 		return ans;
 	}
 	public String txValuesNoNewLine(){

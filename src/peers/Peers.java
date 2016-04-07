@@ -70,7 +70,10 @@ public class Peers {
 	public static void addPeers(String[] IPPK){
 		if(IPPK.length == 3){
 			Node p = new Node(IPPK[0],IPPK[1],IPPK[2]);
-			arr.add(p);
+			if(!p.PK.equals(Main.keyClass.returnPublicKey(Main.keyP))){
+				arr.add(p);
+			}
+			
 		}
 		else{
 			System.out.println("ERROR: Peers node info contains incorrect number of elements");

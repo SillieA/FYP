@@ -41,11 +41,15 @@ public class Client {
 						input = in.readLine();
 
 						System.out.println(IP + ": " + input);
-						if(input.startsWith("#")){
+						if(input.isEmpty()|| input.equals(null)||input.equals("")){
+							
+						}
+						else if(input.startsWith("#")){
 							int typeDelimiter = input.indexOf("#")+1;
 							String type = input.substring(typeDelimiter,typeDelimiter + 3);
 							try{
 								String message = input.substring(typeDelimiter + 4);
+			
 								caller(type,message);//executes code depending on hashtag
 							}catch(StringIndexOutOfBoundsException e){
 								caller(type,null);
@@ -194,7 +198,7 @@ public class Client {
 	public void sendMessage(String message){
 		out.println(message);
 		out.flush();
-		System.out.println("To: " + this.IP + "|");
+		System.out.println("To: " + this.IP + " : ");
 	}
 	public void terminateConnection(){
 		sendMessage("TERMINATE");

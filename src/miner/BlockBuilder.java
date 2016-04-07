@@ -46,6 +46,7 @@ public class BlockBuilder {
 							}
 						}
 						else{
+							System.out.println("Lost Block Race");
 							b.destroy();
 						}
 

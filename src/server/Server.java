@@ -42,15 +42,15 @@ public class Server {
 		//this method listens for the input, and processes it for the caller method
 		public void run() {
 			try {
-
+				
 				BufferedReader in = new BufferedReader(
 						new InputStreamReader(socket.getInputStream()));
 				out = new PrintWriter(socket.getOutputStream(), true);
-
+				String input = "";
 				
-				while (true) {
+				do {
 
-					String input = in.readLine();
+					input = in.readLine();
 					System.out.println(input);
 					if (input == null || input.equals(".")) {
 						break;
@@ -60,7 +60,10 @@ public class Server {
 							caller(Strings.clientSendTx," 0 test test " + String.valueOf(i) + " test");
 						}
 					}
-					else if(input.contains("#")){
+					if(input.isEmpty()|| input.equals(null)||input.equals("")){
+						
+					}
+					else if(input.startsWith("#")){
 						int typeDelimiter = input.indexOf("#")+1;
 						String type = input.substring(typeDelimiter,typeDelimiter + 3);
 						try{
@@ -70,7 +73,7 @@ public class Server {
 							caller(type,null);
 						}
 					}
-				}
+				}while(!input.contains("TERMINATE"));
 			} catch (IOException e) {
 			} finally {
 				try {
@@ -114,7 +117,7 @@ public class Server {
 				terminateConnection();
 			}
 			else{
-				sendMessage("#" + Strings.serverSendDifficulty + " " + String.valueOf(difficulty));
+				sendDifficulty(difficulty);
 			}
 			
 		}
@@ -206,7 +209,7 @@ public class Server {
 			String s = "";
 			
 			for(Block b : BlockChain.MainChain){
-				s += Strings.BlockDelim + Strings.HeadDelim + " " + b.headerValues() + Strings.HeadDelim + " " + Strings.MetaDelim + " " + b.metaValues() + Strings.MetaDelim + " " + Strings.GenDelim + " " + b.gen.values() + Strings.GenDelim + Strings.TxDelim + " " + b.txValuesNoNewLine() + Strings.TxDelim + " ";
+				s += Strings.BlockDelim + " " + Strings.HeadDelim + " " + b.headerValues() + Strings.HeadDelim + " " + Strings.MetaDelim + " " + b.metaValues() + Strings.MetaDelim + " " + Strings.GenDelim + " " + b.gen.values() + Strings.GenDelim + Strings.TxDelim + " " + b.txValuesNoNewLine() + Strings.TxDelim + " ";
 			}
 			s += Strings.BlockDelim;
 			sendMessage("#" + Strings.serverSendBlockChain + " " + s);

@@ -19,9 +19,13 @@ public class BroadcastTx {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				try{
+					C.sendTx(T);
+					System.out.println("Message sent");
+				}catch(NullPointerException e){
+					System.out.println("Unable to connect to : " + str);
+				}
 
-				C.sendTx(T);
-				System.out.println("Message sent");
 			}
 		}
 		catch(Exception e){

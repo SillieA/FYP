@@ -58,6 +58,7 @@ public class Client {
 						}
 					} catch (Exception e1) {
 						e1.printStackTrace();
+						break;
 					}
 
 				}while(!input.contains("TERMINATE"));
@@ -191,10 +192,6 @@ public class Client {
 			}
 		}
 		sendMessage(".");
-		try {
-			socket.close();
-		} catch (IOException e) {
-		}
 	}
 	public void requestPeers(){
 		sendMessage("#PER " + Main.keyClass.returnPublicKey(Main.keyP) + " " + Strings.Role);

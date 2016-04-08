@@ -17,7 +17,11 @@ public class BroadcastBlock {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			c.sendBlock(b);;
+			try{
+				c.sendBlock(b);
+			}catch(NullPointerException e){
+				System.out.println("Could not connect to : " + p.IP);
+			}
 		}
 	}
 }

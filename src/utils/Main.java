@@ -31,13 +31,13 @@ public class Main {
 	
 	//main method
 	public static void main(String args[]) throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchProviderException, SignatureException{
-		boolean b = true;
-		while(b){
-			Strings.Role = JOptionPane.showInputDialog("Type 'Miner' or 'Node' to select network role");
-			if(Strings.Role.equals("Miner") || Strings.Role.equals("Node")){
-				b = false;
-			}
-		}
+//		boolean b = true;
+//		while(b){
+//			Strings.Role = JOptionPane.showInputDialog("Type 'Miner' or 'Node' to select network role");
+//			if(Strings.Role.equals("Miner") || Strings.Role.equals("Node")){
+//				b = false;
+//			}
+//		}
 		keyCheck();
 		P = new Peers();
 //		new BroadcastTx(new Transaction("1","2","3","4","5"));

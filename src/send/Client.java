@@ -52,7 +52,7 @@ public class Client {
 			
 								caller(type,message);//executes code depending on hashtag
 							}catch(StringIndexOutOfBoundsException e){
-								caller(type,null);
+								System.out.println("Server Error : null input");
 							}
 						}
 					} catch (Exception e1) {
@@ -144,12 +144,12 @@ public class Client {
 	//CO1
 	public void sendBlock(Block b){
 		String message = b.valuesDelimited();
-		sendMessage("#" + Strings.clientSendBlock + " " + message);
+		sendMessage("#" + Strings.clientSendBlock + " " + message,"SendBlock");
 	}
 	//CO2
 	public void sendTx(Transaction T){
 		String message = T.values();
-		sendMessage("#" + Strings.clientSendTx + " " + message); 
+		sendMessage("#" + Strings.clientSendTx + " " + message,"SendTx"); 
 		terminateConnection();
 	}
 	//CO3
@@ -159,11 +159,11 @@ public class Client {
 			s += Strings.BlockDelim + Strings.HeadDelim + " " + b.headerValues() + Strings.HeadDelim + " " + Strings.MetaDelim + " " + b.metaValues() + Strings.MetaDelim + " " + Strings.GenDelim + " " + b.gen.values() + Strings.GenDelim + Strings.TxDelim + " " + b.txValuesNoNewLine() + Strings.TxDelim + " ";
 		}
 		s += Strings.BlockDelim;
-		sendMessage("#" + Strings.clientSendBlockChain + " " + s);
+		sendMessage("#" + Strings.clientSendBlockChain + " " + s,"sendChain");
 	}
 	//CO4
 	private void sendDifficulty(int difficulty){//sends local difficulty to server
-		sendMessage("#" + Strings.clientSendDifficulty + " " + String.valueOf(difficulty));
+		sendMessage("#" + Strings.clientSendDifficulty + " " + String.valueOf(difficulty),"SendDif");
 	}
 	//peers
 	private void receivePeers(String message){//receives a list of peers, adds them to the peer list
@@ -185,10 +185,10 @@ public class Client {
 				}
 			}
 		}
-		sendMessage(".");
+		sendMessage(".","RecPeers");
 	}
 	public void requestPeers(){
-		sendMessage("#PER " + Main.keyClass.returnPublicKey(Main.keyP) + " " + Strings.Role);
+		sendMessage("#PER " + Main.keyClass.returnPublicKey(Main.keyP) + " " + Strings.Role, "ReqPeers");
 	}
 	//utility
 	static String[] removeBlanks(String[] input){//removes all blank elements of the array
@@ -196,13 +196,13 @@ public class Client {
 		list.removeAll(Arrays.asList("", null));
 		return list.toArray(new String[list.size()]);
 	}
-	private void sendMessage(String message){
+	private void sendMessage(String message, String source){
 		out.println(message);
 		out.flush();
-		System.out.println("Client Out : ");
+		System.out.println("Client Out(" + source + "): ");
 	}
 	public void terminateConnection(){
-		sendMessage("TERMINATE");
+		sendMessage("TERMINATE","terminate");
 		try {
 			socket.close();
 		} catch (IOException e) {

@@ -22,13 +22,15 @@ public class Peers {
 				try{
 					while(true){
 						syncPeers();
-						try {
-							Thread.sleep(1500);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+
+						Thread.sleep(1500);
+
 						c.requestPeers();
-	
+						
+						Thread.sleep(1500);
+						
+						printPeers();
+						
 						Thread.sleep(60000);
 					}
 				}catch(Exception e){
@@ -83,9 +85,11 @@ public class Peers {
 		thr.start();
 	}
 	public static void printPeers(){
+		System.out.println("Connected Peers:");
 		for(Node n : arr){
 			System.out.println(n.IP + "|" + ProofOfWork.sha256(n.PK) + "|" + n.Type );
 		}
+		System.out.println();
 	}
 	public static void clear(){
 		arr.clear();

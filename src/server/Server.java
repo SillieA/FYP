@@ -66,7 +66,6 @@ public class Server {
 							caller(type,message);//executes code depending on hashtag
 						}catch(StringIndexOutOfBoundsException e){
 							System.out.println("Server Error : null input");
-							caller(type,null);
 						}
 					}
 				}while(!input.contains("TERMINATE"));

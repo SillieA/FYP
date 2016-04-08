@@ -30,12 +30,12 @@ public class BlockBuilder {
 						ArrayList<Transaction> txLista = new ArrayList<Transaction>(TxList);
 
 						String prevBlockHash = BlockChain.latestBlockHeader();
+						System.out.println("Started building block after " + prevBlockHash);
 						String merkle = Merkle.root(txLista);
                                                
 						int[] difficultyNonce = ProofOfWork.find(merkle + prevBlockHash);
 						Block b = new Block(txLista, merkle,difficultyNonce[1] , prevBlockHash,difficultyNonce[0]);
-						generateRewardTx(b);
-						Logger.write(b.hashHeader + "Created!");
+
 						System.out.println(b.hashHeader + "Created!");
 						new BroadcastBlock(b);
 						//take used tx out of pool
@@ -58,9 +58,7 @@ public class BlockBuilder {
 		Thread thr = new Thread(r);
 		thr.start();
 	}
-	public void generateRewardTx(Block b){
-		
-	}
+
 	public void add(Transaction Tx){
 		TxList.add(Tx);
 	}

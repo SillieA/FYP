@@ -32,7 +32,7 @@ public class table extends JFrame {
 						String[][] data = b.valuesArr();
 
 						table = new JTable(data, columnNames);
-						table.setPreferredScrollableViewportSize(new Dimension(500,40));
+						table.setPreferredScrollableViewportSize(new Dimension(500,70));
 						table.setFillsViewportHeight(true);
 
 						JScrollPane scrollPane = new JScrollPane(table);
@@ -45,7 +45,6 @@ public class table extends JFrame {
 						getContentPane().removeAll();
 						getContentPane().repaint();
 						Thread.sleep(1000);
-						System.out.println("table updated");
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

@@ -45,6 +45,8 @@ public class BlockHandler {
 		int txStart;
 		int txFin;
 		
+		System.out.println(String.valueOf("Importing block: " + s));
+		
 		//split all the sections
 		headStart = s.indexOf(Strings.HeadDelim);
 		headFin = s.indexOf(Strings.HeadDelim, headStart +1);

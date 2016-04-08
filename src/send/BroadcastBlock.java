@@ -9,7 +9,7 @@ public class BroadcastBlock {
 //send new block to all connections
 	Client c;
 	public BroadcastBlock(Block b){
-		System.out.println("Broadcasting Block");
+//		System.out.println("Broadcasting Block");
 		for(Node p : Peers.arr){
 			this.c = new Client(p.IP, Strings.ServerPort);
 			try {

@@ -41,15 +41,14 @@ public class Client {
 
 						input = in.readLine();
 
-						System.out.println(IP + ": " + input);
+						System.out.println("Client In: " + input);
 						if(input.isEmpty()|| input.equals(null)||input.equals("")){
 							
 						}
 						else if(input.startsWith("#")){
-							int typeDelimiter = input.indexOf("#")+1;
-							String type = input.substring(typeDelimiter,typeDelimiter + 3);
+							String type = input.substring(1,4);
 							try{
-								String message = input.substring(typeDelimiter + 4);
+								String message = input.substring(4);
 			
 								caller(type,message);//executes code depending on hashtag
 							}catch(StringIndexOutOfBoundsException e){
@@ -57,7 +56,6 @@ public class Client {
 							}
 						}
 					} catch (Exception e1) {
-						e1.printStackTrace();
 						break;
 					}
 
@@ -84,7 +82,7 @@ public class Client {
 				new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
 		
-		System.out.println("Connected to " + serverAddress + ":" + String.valueOf(serverPort));
+//		System.out.println("Connected to " + serverAddress + ":" + String.valueOf(serverPort));
 		
 	}
 	
@@ -107,9 +105,6 @@ public class Client {
 		BlockHandler bh = new BlockHandler();
 		int difficulty = 0;
 		String[] Blocks = message.split(Strings.BlockDelim);
-		for(String str : Blocks){
-			System.out.println(str);
-		}
 		for(String str : Blocks){
 			if(!bh.containsLetters(str)){
 				difficulty += bh.blockReceive(str, true);
@@ -164,7 +159,7 @@ public class Client {
 			s += Strings.BlockDelim + Strings.HeadDelim + " " + b.headerValues() + Strings.HeadDelim + " " + Strings.MetaDelim + " " + b.metaValues() + Strings.MetaDelim + " " + Strings.GenDelim + " " + b.gen.values() + Strings.GenDelim + Strings.TxDelim + " " + b.txValuesNoNewLine() + Strings.TxDelim + " ";
 		}
 		s += Strings.BlockDelim;
-		out.println("#" + Strings.clientSendBlockChain + " " + s);
+		sendMessage("#" + Strings.clientSendBlockChain + " " + s);
 	}
 	//CO4
 	private void sendDifficulty(int difficulty){//sends local difficulty to server
@@ -173,7 +168,6 @@ public class Client {
 	//peers
 	private void receivePeers(String message){//receives a list of peers, adds them to the peer list
 		String[] s = message.split(",");
-		System.out.println(String.valueOf(s.length));
 		Peers.clear();
 		String[] k = null;
 		for(String str : s){
@@ -205,7 +199,7 @@ public class Client {
 	private void sendMessage(String message){
 		out.println(message);
 		out.flush();
-		System.out.println("To: " + this.IP + " : ");
+		System.out.println("Client Out : ");
 	}
 	public void terminateConnection(){
 		sendMessage("TERMINATE");

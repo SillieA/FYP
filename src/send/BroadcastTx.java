@@ -21,7 +21,7 @@ public class BroadcastTx {
 				}
 				try{
 					C.sendTx(T);
-					System.out.println("Message sent");
+//					System.out.println("Message sent");
 				}catch(NullPointerException e){
 					System.out.println("Unable to connect to : " + str);
 				}

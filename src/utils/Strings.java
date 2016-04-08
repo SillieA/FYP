@@ -28,7 +28,7 @@ public class Strings {
 	//words used in logic
 	public static String Role = "";
 	final public static String Genesis = "genesis";
-	final public static String PeerServerIP = "127.0.0.1";
+	final public static String PeerServerIP = "25.38.219.89";
 	final public static String Difficulty = "00000";
 	final public static String BlockDelim = "###";
 	final public static String HeadDelim = "+++";

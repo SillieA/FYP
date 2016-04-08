@@ -36,8 +36,8 @@ public class Server {
 		public Connector(Socket socket) {
 			this.socket = socket;
 			this.clientIP = socket.getInetAddress().toString().substring(1);
-			System.out.println(clientIP);
-			System.out.println("New connection with client at " + socket);
+//			System.out.println(clientIP);
+//			System.out.println("New connection with client at " + socket);
 		}
 		//this method listens for the input, and processes it for the caller method
 		public void run() {
@@ -49,9 +49,8 @@ public class Server {
 				String input = "";
 				
 				do {
-
 					input = in.readLine();
-					System.out.println(input);
+					System.out.println("Server In: " + input);
 					if (input == null || input.equals(".")) {
 						break;
 					}
@@ -60,16 +59,13 @@ public class Server {
 							caller(Strings.clientSendTx," 0 test test " + String.valueOf(i) + " test");
 						}
 					}
-					if(input.isEmpty()|| input.equals(null)||input.equals("")){
-						
-					}
 					else if(input.startsWith("#")){
-						int typeDelimiter = input.indexOf("#")+1;
-						String type = input.substring(typeDelimiter,typeDelimiter + 3);
+						String type = input.substring(1,4);
 						try{
-							String message = input.substring(typeDelimiter + 4);
+							String message = input.substring(4);
 							caller(type,message);//executes code depending on hashtag
 						}catch(StringIndexOutOfBoundsException e){
+							System.out.println("Server Error : null input");
 							caller(type,null);
 						}
 					}
@@ -219,6 +215,7 @@ public class Server {
 		public void sendMessage(String message){
 			out.println(message);
 			out.flush();
+			System.out.println("Server Out: " + message);
 		}
 		public void terminateConnection(){
 			sendMessage("TERMINATE");

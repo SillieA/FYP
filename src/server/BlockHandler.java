@@ -24,15 +24,6 @@ public class BlockHandler {
 		return difficulty;
 	}
 
-	public ArrayList<Block> requestChain(Node p){
-		Client c = new Client(p.IP,Strings.ServerPort);
-		c.sendMessage("#BLR");
-		while(true){
-
-			return BlockChain.MainChain;
-
-		}
-	}
 	public int blockReceive(String s, boolean addToAltChain){//should only be true when receiving blockchain
 		Transaction GenTx;
 		Block b;

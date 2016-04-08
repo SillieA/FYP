@@ -20,8 +20,7 @@ public class BroadcastTx {
 					e.printStackTrace();
 				}
 
-				C.sendMessage("#" + Strings.clientSendTx + " " + T.values());
-				C.sendMessage("TERMINATE");
+				C.sendTx(T);
 				System.out.println("Message sent");
 			}
 		}

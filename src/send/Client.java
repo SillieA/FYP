@@ -13,6 +13,7 @@ import peers.Peers;
 import server.BlockHandler;
 import utils.Block;
 import utils.BlockChain;
+import utils.Main;
 import utils.Strings;
 import utils.Transaction;
 
@@ -153,6 +154,7 @@ public class Client {
 	public void sendTx(Transaction T){
 		String message = T.values();
 		sendMessage("#" + Strings.clientSendTx + " " + message); 
+		terminateConnection();
 	}
 	//CO3
 	private void sendBlockChain(){//sends current blockchain
@@ -161,14 +163,14 @@ public class Client {
 			s += Strings.BlockDelim + Strings.HeadDelim + " " + b.headerValues() + Strings.HeadDelim + " " + Strings.MetaDelim + " " + b.metaValues() + Strings.MetaDelim + " " + Strings.GenDelim + " " + b.gen.values() + Strings.GenDelim + Strings.TxDelim + " " + b.txValuesNoNewLine() + Strings.TxDelim + " ";
 		}
 		s += Strings.BlockDelim;
-		out.println("#BLR " + s);
+		out.println("#" + Strings.clientSendBlockChain + " " + s);
 	}
 	//CO4
 	private void sendDifficulty(int difficulty){//sends local difficulty to server
 		sendMessage("#" + Strings.clientSendDifficulty + " " + String.valueOf(difficulty));
 	}
 	//peers
-	private static void receivePeers(String message){//receives a list of peers, adds them to the peer list
+	private void receivePeers(String message){//receives a list of peers, adds them to the peer list
 		String[] s = message.split(",");
 		System.out.println(String.valueOf(s.length));
 		Peers.clear();
@@ -188,6 +190,14 @@ public class Client {
 				}
 			}
 		}
+		sendMessage(".");
+		try {
+			socket.close();
+		} catch (IOException e) {
+		}
+	}
+	public void requestPeers(){
+		sendMessage("#PER " + Main.keyClass.returnPublicKey(Main.keyP) + " " + Strings.Role);
 	}
 	//utility
 	static String[] removeBlanks(String[] input){//removes all blank elements of the array
@@ -195,7 +205,7 @@ public class Client {
 		list.removeAll(Arrays.asList("", null));
 		return list.toArray(new String[list.size()]);
 	}
-	public void sendMessage(String message){
+	private void sendMessage(String message){
 		out.println(message);
 		out.flush();
 		System.out.println("To: " + this.IP + " : ");

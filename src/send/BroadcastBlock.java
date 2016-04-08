@@ -17,7 +17,7 @@ public class BroadcastBlock {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			c.sendMessage("#" + Strings.clientSendBlock + " " + b.allValues());
+			c.sendBlock(b);;
 		}
 	}
 }

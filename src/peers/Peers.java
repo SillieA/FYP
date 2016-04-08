@@ -27,13 +27,7 @@ public class Peers {
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						c.sendMessage("#PER " + Main.keyClass.returnPublicKey(Main.keyP) + " " + Strings.Role);
-						try {
-							Thread.sleep(1500);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						c.sendMessage(".");
+						c.requestPeers();
 	
 						Thread.sleep(60000);
 					}

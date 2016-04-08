@@ -107,7 +107,7 @@ public class Server {
 			System.out.println("CO1 called");
 			int difficulty;
 			BlockHandler bh = new BlockHandler();
-			difficulty = bh.blockReceive(message,true);
+			difficulty = bh.blockReceive(message,false);
 			if(difficulty == -1){
 				terminateConnection();
 			}

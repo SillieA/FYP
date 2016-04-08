@@ -115,7 +115,7 @@ public class Block {
 		String Header = " " + Strings.HeadDelim + " " + headerValues() +  " " + Strings.HeadDelim + " ";//returns the values of the header
 		String Meta = " " + Strings.MetaDelim + " " + metaValues() + " " + Strings.MetaDelim + " ";
 		String Gen = " " + Strings.GenDelim + " " + generatedTxValues() + " " + Strings.GenDelim + " ";
-		String Transactions = " " + Strings.TxDelim + " " + txValues() + " " + Strings.TxDelim + " ";
+		String Transactions = " " + Strings.TxDelim + " " + txValuesNoNewLine() + " " + Strings.TxDelim + " ";
 		
 		return Header + Meta + Gen + Transactions;
 	}

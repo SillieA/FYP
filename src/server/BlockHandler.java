@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import miner.Validation;
 import peers.Node;
 import send.Client;
 import utils.Block;
@@ -48,13 +49,13 @@ public class BlockHandler {
 		System.out.println(String.valueOf("Importing block: " + s));
 		
 		//split all the sections
-		headStart = s.indexOf(Strings.HeadDelim);
+		headStart = s.indexOf(Strings.HeadDelim) + Strings.HeadDelim.length();
 		headFin = s.indexOf(Strings.HeadDelim, headStart +1);
-		metaStart = s.indexOf(Strings.MetaDelim);
+		metaStart = s.indexOf(Strings.MetaDelim) + Strings.MetaDelim.length();
 		metaFin = s.indexOf(Strings.MetaDelim, metaStart + 1);
-		genStart = s.indexOf(Strings.GenDelim);
+		genStart = s.indexOf(Strings.GenDelim) + Strings.GenDelim.length();
 		genFin = s.indexOf(Strings.GenDelim, genStart + 1);
-		txStart = s.indexOf(Strings.TxDelim);
+		txStart = s.indexOf(Strings.TxDelim) + Strings.TxDelim.length();
 		txFin = s.indexOf(Strings.TxDelim, txStart + 1);
 		System.out.println(String.valueOf(headStart + " " + headFin));
 		//trim the sections to remove spaces
@@ -78,9 +79,13 @@ public class BlockHandler {
 			System.out.println("Error: " + Arrays.toString(Transactions));
 		}
 		else{//create transactions
-			for(int it = 0;it <= Transactions.length/5;it++){
-				Transaction Tr = new Transaction(Transactions[it*5],Transactions[it * 5 + 1],Transactions[it*5+2],Transactions[it*5+3],Transactions[it*5+4]);
+			for(int it = 0;it <= Transactions.length/5 - 1;it++){
+				Transaction Tr = new Transaction(Transactions[it *5 ],Transactions[it * 5 + 1],Transactions[it*5+2],Transactions[it*5+3],Transactions[it*5+4]);
 				txArr.add(Tr);
+				//validate all of the transactions
+//				if(Validation.checkTx(Tr) == false){
+//					return -1;
+//				}
 			}
 		}
 		//create genTx

@@ -49,12 +49,6 @@ public class Main {
 		BlockChain.initialiseChain();
 		GUITest();
 		new Device1();
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-	        public void run() {
-	            Logger.close();
-	            BlockChain.saveBlockChain();
-	        }
-	    }));
 		startServer();//starts server which contains the initialiser for UnconfirmedTxList
 		
 

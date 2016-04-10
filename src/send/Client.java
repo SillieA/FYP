@@ -25,7 +25,7 @@ public class Client {
 	private String IP;
 
 
-	public Client(String IP, int port) {
+	public Client(final String IP, final int port) {
 		this.IP = IP;
 		Runnable r = new Runnable(){
 			public void run(){

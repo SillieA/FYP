@@ -79,14 +79,15 @@ public class BlockChain {
 		return b.hashHeader;
 	}
 	public static void saveBlockChain(){
-		ArrayList<Block> chainCopy = new ArrayList<Block>(MainChain);
+//		ArrayList<Block> chainCopy = new ArrayList<Block>();
+//		chainCopy.addAll(MainChain);
 		try{
 			FileWriter writer = new FileWriter(Strings.FileBlockChain); 
 			writer.write("%Hash of Previous Block header, Merkle Root, Block Creation Unix Time, Nonce \r\n");
 			writer.write("%Hash of Current Block header, Transaction Count in Block, Difficulty of Solution, Public Key of miner \r\n");
 			writer.write("%Transaction Number, From, To, Token value, Reference Transaction \r\n");
-			for(int i = 0; i < chainCopy.size(); i++){
-			  writer.write(chainCopy.get(i).allValues());
+			for(int i = 0; i < MainChain.size(); i++){
+			  writer.write(MainChain.get(i).allValues());
 			  writer.write("\r\n");
 			}
 			writer.close();

@@ -18,7 +18,7 @@ public class UnconfirmedTx {
 	{
 
 		queue = new LinkedList<Transaction>();
-		BlockBuilder c = new BlockBuilder();
+		final BlockBuilder c = new BlockBuilder();
 		
 		r = new Runnable(){
 			public void run(){
@@ -26,8 +26,8 @@ public class UnconfirmedTx {
 				while(true){
 					if(queue.isEmpty()){
 						try {
-							BlockChain.saveBlockChain();
 							Thread.sleep(3000);
+							BlockChain.saveBlockChain();
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 							System.out.println(Strings.ErrorThreadWait);

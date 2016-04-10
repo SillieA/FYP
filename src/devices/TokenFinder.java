@@ -8,23 +8,24 @@ import utils.Main;
 import utils.Transaction;
 
 public class TokenFinder {
-	public TokenFinder(String token){
-		
-	}
+
 	//searches the blockchain for 
-	public ArrayList<Transaction> findToken(String token){
-		ArrayList<Transaction> txArr = new ArrayList<Transaction>();
-		for(Block B : BlockChain.MainChain){
-			if(B.gen.Token.equals(token)){
-				txArr.add(B.gen);
-			}
-			for(Transaction T : B.TxList){
-				if(T.Token.equals(token)){
-					txArr.add(T);
+	public ArrayList<Transaction> findTokens(){
+		ArrayList<Transaction> ownedTxArr = new ArrayList<Transaction>();
+		String pubk = Main.keyClass.returnPublicKey(Main.keyP);
+		Block b;
+		for(int i = BlockChain.MainChain.size() - 7; i > 0; i--){
+			b = BlockChain.MainChain.get(i);
+			for(Transaction T : b.TxList){
+				if(T.To.equals(pubk)){
+					ownedTxArr.add(T);
 				}
 			}
+			if(b.gen.To.equals(pubk)){
+				ownedTxArr.add(b.gen);
+			}
 		}
-		return txArr;
+		return ownedTxArr;
 	}
 	//returns unspent transactions from a list of transactions
 	public ArrayList<Transaction> spendableTx(ArrayList<Transaction> txArr){

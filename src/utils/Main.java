@@ -31,17 +31,17 @@ public class Main {
 	
 	//main method
 	public static void main(String args[]) throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchProviderException, SignatureException{
-//		boolean b = true;
-//		while(b){
-//			Strings.Role = JOptionPane.showInputDialog("Type 'Miner' or 'Node' to select network role");
-//			if(Strings.Role.equals("Miner") || Strings.Role.equals("Node")){
-//				b = false;
-//			}
-//		}
+
 		keyCheck();
 		P = new Peers();
-//		new BroadcastTx(new Transaction("1","2","3","4","5"));
-		new Logger();
+		
+		boolean b = true;
+		while(b){
+			Strings.Role = JOptionPane.showInputDialog("Type 'Miner' or 'Node' to select network role");
+			if(Strings.Role.equals("Miner") || Strings.Role.equals("Node")){
+				b = false;
+			}
+		}
 		new BlockChain();
 		new UnconfirmedTx();
 		BlockChain.initialiseChain();
@@ -75,8 +75,6 @@ public class Main {
 		gui.setSize(800,400);
 		gui.setVisible(true);
 		gui.setTitle("table");
-
-
 	}
 	public static void startServer(){
 		Thread t = new Thread() {

@@ -38,12 +38,14 @@ public class Main {
 		boolean b = true;
 		while(b){
 			Strings.Role = JOptionPane.showInputDialog("Type 'Miner' or 'Node' to select network role");
-			if(Strings.Role.equals("Miner") || Strings.Role.equals("Node")){
+			if(Strings.Role.equals("Miner")|| Strings.Role.equals("Node")){
 				b = false;
 			}
 		}
 		new BlockChain();
-		new UnconfirmedTx();
+		if(Strings.Role.equals("Miner")){
+			new UnconfirmedTx();
+		}
 		BlockChain.initialiseChain();
 		GUITest();
 		new Device1();
@@ -79,9 +81,6 @@ public class Main {
 	public static void startServer(){
 		Thread t = new Thread() {
 		    public void run() {
-//		    	these is for the old server class
-//		        Server host = new Server();
-//				host.startRunning(Strings.ServerPort);
 				try {
 					Server.initialise(Strings.ServerPort);
 				} catch (Exception e) {

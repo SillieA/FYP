@@ -15,7 +15,6 @@ import utils.Strings;
 import utils.Transaction;
 
 public class Server {
-
 	public static void initialise(int port) throws Exception {
 		System.out.println("Server is running.");
 		ServerSocket listener = new ServerSocket(port);
@@ -84,7 +83,7 @@ public class Server {
 			
 			case Strings.clientSendBlock : blockReceive(message);
 			break;
-			case Strings.clientSendTx : txPoolReceive(message);//transaction transmission received
+			case Strings.clientSendTx : if((Strings.Role).equals("Miner")) txPoolReceive(message);//transaction transmission received
 			break;
 			case Strings.clientSendBlockChain : blockchainReceive(message);//block transmission received
 			break;
@@ -120,6 +119,7 @@ public class Server {
 		private void txPoolReceive(String message) {//process for receiving transaction
 			System.out.println("CO2 called");
 			System.out.println("CO2: TxpoolReceive " + message);
+			
 			Transaction T = new Transaction();
 			try{
 
@@ -143,6 +143,7 @@ public class Server {
 				e.printStackTrace();
 			}
 			terminateConnection();
+			
 
 		}
 	

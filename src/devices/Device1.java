@@ -1,5 +1,7 @@
 package devices;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import miner.UnconfirmedTx;
@@ -35,8 +37,6 @@ public class Device1 {
 		tokenProcess();
 	}
 	public void tokenProcess(){
-
-
 		TokenFinder tf = new TokenFinder();
 		Thread t = new Thread(){
 			public void run(){
@@ -59,6 +59,14 @@ public class Device1 {
 			}
 		};
 		t.start();
+	}
+	public void saveTimestamps(){
+		try {
+			FileWriter writer = new FileWriter(Strings.FileBlockChain);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	public void timestamp(ArrayList<Transaction> txarr ){
 		String[] timeToken = new String[2];

@@ -70,7 +70,8 @@ public class Strings {
 	final public static String FilePrivateKey = FileDirectory + "private.key";
 	final public static String FileAltChains = FileDirectory + "AltChain";
 	final public static String FileLogger = FileDirectory + "Log.txt";
-//	final public static String
+	final public static String FileTimeStamp = FileDirectory + "Tokens.txt";
+	
 //	final public static String
 //	final public static String
 	

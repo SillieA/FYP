@@ -70,8 +70,11 @@ public class BlockChain {
 			}catch(IOException IOE){
 				System.out.println(IOE.toString());
 			}
-			
-			b = MainChain.get(MainChain.size()-1);
+			try{
+				b = MainChain.get(MainChain.size()-1);
+			}catch(ArrayIndexOutOfBoundsException e1){
+				return Strings.Genesis;
+			}
 		}
 		return b.hashHeader;
 	}

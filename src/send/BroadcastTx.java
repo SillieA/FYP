@@ -9,7 +9,7 @@ public class BroadcastTx {
 	private String str;
 	private Client C;
 	public BroadcastTx(Transaction T){
-		System.out.println("BroadcastTx: " + T.values());
+//		System.out.println("BroadcastTx: " + T.values());
 		try{
 			for(String str : Peers.getIPs()){
 				this.str = str;

@@ -1,0 +1,3 @@
+%Hash of Previous Block header, Merkle Root, Block Creation Unix Time, Nonce 
+%Hash of Current Block header, Transaction Count in Block, Difficulty of Solution, Public Key of miner 
+%Transaction Number, From, To, Token value, Reference Transaction 

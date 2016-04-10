@@ -25,6 +25,7 @@ public class TokenFinder {
 				ownedTxArr.add(b.gen);
 			}
 		}
+		System.out.println("Found " + String.valueOf(ownedTxArr.size()) + " Tokens");
 		return ownedTxArr;
 	}
 	//returns unspent transactions from a list of transactions

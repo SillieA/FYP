@@ -1,5 +1,7 @@
 package utils;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.Random;
 import miner.ProofOfWork;
 
@@ -62,12 +64,12 @@ public class Strings {
 	final public static String serverDebug5 = "SD5";
 	
 	//File names
-	final public static String FileBlockChain = "C:\\FYP\\BlockChain.txt";
-	final public static String FilePublicKey = "C:\\FYP\\public.key";
-	final public static String FilePrivateKey = "C:\\FYP\\private.key";
-	final public static String FileDirectory = "C:\\FYP\\";
-	final public static String FileAltChains = "C:\\FYP\\AltChain";
-	final public static String FileLogger = "C:\\FYP\\Log.txt";
+	final public static String FileDirectory = Paths.get(".").toAbsolutePath().normalize().toString() + File.separator;
+	final public static String FileBlockChain = FileDirectory + "BlockChain.txt";
+	final public static String FilePublicKey = FileDirectory + "public.key";
+	final public static String FilePrivateKey = FileDirectory + "private.key";
+	final public static String FileAltChains = FileDirectory + "AltChain";
+	final public static String FileLogger = FileDirectory + "Log.txt";
 //	final public static String
 //	final public static String
 //	final public static String

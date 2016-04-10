@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import utils.BlockChain;
 import utils.Strings;
 import utils.Transaction;
 
@@ -25,6 +26,7 @@ public class UnconfirmedTx {
 				while(true){
 					if(queue.isEmpty()){
 						try {
+							BlockChain.saveBlockChain();
 							Thread.sleep(3000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();

@@ -14,6 +14,7 @@ public class GenesisBlock {
 				JOptionPane.YES_NO_OPTION);
 		if(input == JOptionPane.YES_OPTION){
 			createGenesisBlock();
+			BlockChain.saveBlockChain();
 		}
 		else if(input == JOptionPane.NO_OPTION){
 			//get some blocks from other nodes.

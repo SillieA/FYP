@@ -21,6 +21,7 @@ public class BroadcastBlock {
 				c.sendBlock(b);
 			}catch(NullPointerException e){
 				System.out.println("Could not connect to : " + p.IP);
+				c.terminateConnection();
 			}
 		}
 	}

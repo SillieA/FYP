@@ -9,11 +9,12 @@ import java.security.SignatureException;
 import miner.ProofOfWork;
 
 public class Transaction {
-	public String TxNumber;//uid of Tx?
+	public String TxNumber;//hash of other values, signed by priv key of 'From'
 	public String From;
 	public String To;
 	public String Token;
 	public String RefTx;
+
 	
 	//values can either be written via constructors or from 
 	public Transaction(){

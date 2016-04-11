@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import devices.Device1;
+import devices.TokenFinder;
 import devices.table;
 import miner.UnconfirmedTx;
 import peers.Peers;
@@ -33,6 +34,7 @@ public class Main {
 	public static void main(String args[]) throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchProviderException, SignatureException{
 
 		keyCheck();
+		System.out.println(keyClass.returnPublicKey(keyP));
 		P = new Peers();
 		
 		boolean b = true;
@@ -47,11 +49,11 @@ public class Main {
 			new UnconfirmedTx();
 		}
 		BlockChain.initialiseChain();
+		new TokenFinder();
 		GUITest();
 		new Device1();
-		startServer();//starts server which contains the initialiser for UnconfirmedTxList
+		startServer();//starts server
 		
-
 //		String x = "catface";
 //		String modx = keyClass.privateKeySign(x);
 //		String pub = keyClass.returnPublicKey(keyP);

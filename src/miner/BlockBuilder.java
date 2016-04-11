@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import send.BroadcastBlock;
 import utils.Block;
 import utils.BlockChain;
-import utils.Logger;
 import utils.Strings;
 import utils.Transaction;
 
@@ -15,8 +14,14 @@ public class BlockBuilder {
 	
 	public BlockBuilder(){
 		TxList = new ArrayList<Transaction>();
+
 		Runnable r = new Runnable(){
 			public void run(){
+				try {
+					Thread.sleep(10000);;
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				System.out.println(Strings.NoteCurrentBlockUp);
 				while(true){
 					if(TxList.size()<2){

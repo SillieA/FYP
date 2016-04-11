@@ -16,6 +16,10 @@ public class BlockHandler {
 
 //	public static ArrayList<Block> altChain;
 	public ArrayList<Block> altChain;
+	
+	public BlockHandler(){
+		altChain = new ArrayList<Block>();
+	}
 
 	public int totalDifficulty(ArrayList<Block> blkChn){
 		int difficulty = 0;
@@ -49,13 +53,13 @@ public class BlockHandler {
 		System.out.println(String.valueOf("Importing block: " + s));
 		
 		//split all the sections
-		headStart = s.indexOf(Strings.HeadDelim) + Strings.HeadDelim.length();
+		headStart = s.indexOf(Strings.HeadDelim) + Strings.HeadDelim.length() - 1;
 		headFin = s.indexOf(Strings.HeadDelim, headStart +1);
-		metaStart = s.indexOf(Strings.MetaDelim) + Strings.MetaDelim.length();
+		metaStart = s.indexOf(Strings.MetaDelim) + Strings.MetaDelim.length() - 1;
 		metaFin = s.indexOf(Strings.MetaDelim, metaStart + 1);
-		genStart = s.indexOf(Strings.GenDelim) + Strings.GenDelim.length();
+		genStart = s.indexOf(Strings.GenDelim) + Strings.GenDelim.length() - 1;
 		genFin = s.indexOf(Strings.GenDelim, genStart + 1);
-		txStart = s.indexOf(Strings.TxDelim) + Strings.TxDelim.length();
+		txStart = s.indexOf(Strings.TxDelim) + Strings.TxDelim.length() - 1;
 		txFin = s.indexOf(Strings.TxDelim, txStart + 1);
 		System.out.println(String.valueOf(headStart + " " + headFin));
 		//trim the sections to remove spaces
@@ -95,19 +99,22 @@ public class BlockHandler {
 		//add the genTx
 		b.gen = GenTx;
 		//see if block fits on the chain
-		if(BlockChain.MainChain.get(BlockChain.MainChain.size()-1).hashHeader.equals(b.hashPrevBlock)){
+		if(BlockChain.MainChain.get(BlockChain.MainChain.size()-1).hashHeader.equals(b.hashPrevBlock) && addToAltChain == false){
 			System.out.println("Block added to MainChain");
 			BlockChain.MainChain.add(b);
+			BlockChain.saveBlockChain();
 			return -1;
 		}
 		else if(addToAltChain == true){//if not, add it to alt chain and return difficulty
 			altChain.add(b);
-			return BlockChain.chainDifficulty();
+			return b.difficulty;
 		}
 		else{
-			return BlockChain.chainDifficulty();
+			return b.difficulty;
 		}
 	}
+	
+
 
 	public void printChain(){
 		for(int i = 0; i < altChain.size(); i++){

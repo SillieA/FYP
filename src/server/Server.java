@@ -49,7 +49,7 @@ public class Server {
 				
 				do {
 					input = in.readLine();
-					System.out.println("Server In: " + input);
+//					System.out.println("Server In: " + input);
 					if (input == null || input.equals(".")) {
 						break;
 					}
@@ -153,6 +153,7 @@ public class Server {
 			BlockHandler bh = new BlockHandler();
 			int difficulty = 0;
 			String[] Blocks = message.split(Strings.BlockDelim);
+			int currentDifficulty;
 			for(String str : Blocks){
 				System.out.println(str);
 			}
@@ -162,11 +163,17 @@ public class Server {
 				}
 				
 			}
-			if(difficulty > BlockChain.chainDifficulty()){
+			currentDifficulty = BlockChain.chainDifficulty();
+			System.out.println("DIFF------ NEW: " + String.valueOf(difficulty) + "OLD: " + String.valueOf(currentDifficulty));
+
+			if(difficulty > currentDifficulty){
 				BlockChain.MainChain = new ArrayList<Block>(bh.altChain);
 				bh.altChain.clear();
+				System.out.println("Chain replaced");
 			}
-			bh.printChain();
+			else{
+				System.out.println("received chain difficulty too LOW!");
+			}
 			terminateConnection();
 		}
 		

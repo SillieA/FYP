@@ -104,13 +104,16 @@ public class Client {
 	private void receiveBlockChain(String message) {
 		BlockHandler bh = new BlockHandler();
 		int difficulty = 0;
+		int currentDifficulty;
 		String[] Blocks = message.split(Strings.BlockDelim);
 		for(String str : Blocks){
 			if(!bh.containsLetters(str)){
 				difficulty += bh.blockReceive(str, true);
 			}
 		}
-		if(difficulty > BlockChain.chainDifficulty()){
+		currentDifficulty = BlockChain.chainDifficulty();
+		System.out.println("DIFF------ NEW: " + String.valueOf(difficulty) + "OLD: " + String.valueOf(currentDifficulty));
+		if(difficulty > currentDifficulty){
 			BlockChain.MainChain = new ArrayList<Block>(bh.altChain);
 			bh.altChain.clear();
 		}

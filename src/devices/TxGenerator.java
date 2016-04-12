@@ -5,18 +5,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import miner.UnconfirmedTx;
+import peers.Node;
+import peers.Peers;
 import send.BroadcastTx;
 import utils.BlockChain;
 import utils.Main;
 import utils.Strings;
 import utils.Transaction;
 
-public class Device1 {
+public class TxGenerator {
 	
 	
 	ArrayList<String[]> createdTx;
 	
-	public Device1(){
+	public TxGenerator(final int repeats,final String tokenName){
 		
 		createdTx = new ArrayList<String[]>();
 		Thread t = new Thread(){
@@ -27,14 +29,15 @@ public class Device1 {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				for(int i = 0; i<1000;i++){
+				for(int i = 0; i<repeats;i++){
 //					try {
 //						Thread.sleep(20);
 //					} catch (InterruptedException e) {
 //						e.printStackTrace();
 //					}
-					String tkn = "DeviceOne" + String.valueOf(i);
-					Transaction T = new Transaction(null, Main.keyClass.returnPublicKey(Main.keyP),Main.keyClass.returnPublicKey(Main.keyP),tkn,Strings.Genesis);
+					String tkn = tokenName + String.valueOf(i);
+					Node n = Peers.getRandomNode();
+					Transaction T = new Transaction(null, Main.keyClass.returnPublicKey(Main.keyP),n.PK,tkn,Strings.Genesis);
 					T.generateReference();
 					String[] Str = new String[]{T.Token,String.valueOf(System.currentTimeMillis())};
 					createdTx.add(Str);
@@ -47,7 +50,6 @@ public class Device1 {
 					e.printStackTrace();
 				}
 				txSendTime();
-				new Device1();
 			}
 		};
 		t.start();

@@ -2,7 +2,6 @@ package send;
 
 import peers.Node;
 import peers.Peers;
-import utils.Strings;
 import utils.Transaction;
 
 public class BroadcastTx {

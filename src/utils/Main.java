@@ -14,7 +14,7 @@ import java.security.spec.InvalidKeySpecException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import devices.Device1;
+import devices.TxGenerator;
 import devices.TokenFinder;
 import devices.table;
 import miner.UnconfirmedTx;
@@ -32,37 +32,25 @@ public class Main {
 	
 	//main method
 	public static void main(String args[]) throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchProviderException, SignatureException{
-
+		//args[0] = role
+		//args[1] = number of communications to send
+		//args[2] = token Name
+		if(args[0].equals("Miner") || args[0].equals("Node")){
+			Strings.Role = args[0];
+		}
 		keyCheck();
 		System.out.println(keyClass.returnPublicKey(keyP));
 		P = new Peers();
-		
-		boolean b = true;
-		while(b){
-			Strings.Role = JOptionPane.showInputDialog("Type 'Miner' or 'Node' to select network role");
-			if(Strings.Role.equals("Miner")|| Strings.Role.equals("Node")){
-				b = false;
-			}
-		}
+
 		new BlockChain();
 		if(Strings.Role.equals("Miner")){
 			new UnconfirmedTx();
 		}
 		BlockChain.initialiseChain();
 		new TokenFinder();
-		GUITest();
-		new Device1();
+//		GUITest();
+		new TxGenerator(Integer.parseInt(args[1]),args[2]);
 		startServer();//starts server
-		
-//		String x = "catface";
-//		String modx = keyClass.privateKeySign(x);
-//		String pub = keyClass.returnPublicKey(keyP);
-//		System.out.println(x + " " +  modx + " " + " " + pub);
-//		boolean b = keyClass.verifySig(modx, pub, x);
-//		System.out.println(String.valueOf(b));
-		
-		//		String s[] = keyClass.returnKeyPair(keyP);
-		//		System.out.println(s[0] +"\n" + s[1]);
 	}
 	//starts the server to listen for connections
 	public static void GUITest(){

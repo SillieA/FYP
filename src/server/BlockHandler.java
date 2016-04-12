@@ -100,10 +100,15 @@ public class BlockHandler {
 		b.gen = GenTx;
 		//see if block fits on the chain
 		if(BlockChain.MainChain.get(BlockChain.MainChain.size()-1).hashHeader.equals(b.hashPrevBlock) && addToAltChain == false){
-			System.out.println("Block added to MainChain");
-			BlockChain.MainChain.add(b);
-			BlockChain.saveBlockChain();
+			if(Validation.checkBlock(b)){
+				System.out.println("Block added to MainChain");
+				BlockChain.MainChain.add(b);
+				BlockChain.saveBlockChain();
+				return -1;
+			}
+			System.out.println("Block Validation failed!");
 			return -1;
+
 		}
 		else if(addToAltChain == true){//if not, add it to alt chain and return difficulty
 			altChain.add(b);

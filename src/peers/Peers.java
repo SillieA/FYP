@@ -3,6 +3,7 @@ package peers;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import miner.ProofOfWork;
@@ -93,5 +94,14 @@ public class Peers {
 	}
 	public static void clear(){
 		arr.clear();
+	}
+	public static Node getRandomNode(){
+		Random r = new Random();
+		while(true){
+			int rand = r.nextInt(arr.size());
+			if(arr.get(rand).Type.equals("Node")){
+				return arr.get(rand);
+			}
+		}
 	}
 }

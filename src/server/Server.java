@@ -103,7 +103,7 @@ public class Server {
 		//inputs
 		//CO1
 		private void blockReceive(String message){//process for receiving a block
-			System.out.println("CO1 called");
+//			System.out.println("CO1 called");
 			int difficulty;
 			BlockHandler bh = new BlockHandler();
 			difficulty = bh.blockReceive(message,false);
@@ -117,8 +117,8 @@ public class Server {
 		}
 		//CO2
 		private void txPoolReceive(String message) {//process for receiving transaction
-			System.out.println("CO2 called");
-			System.out.println("CO2: TxpoolReceive " + message);
+//			System.out.println("CO2 called");
+//			System.out.println("CO2: TxpoolReceive " + message);
 			
 			Transaction T = new Transaction();
 			try{
@@ -222,7 +222,7 @@ public class Server {
 		public void sendMessage(String message){
 			out.println(message);
 			out.flush();
-			System.out.println("Server Out: " + message);
+//			System.out.println("Server Out: " + message);
 		}
 		public void terminateConnection(){
 			sendMessage("TERMINATE");

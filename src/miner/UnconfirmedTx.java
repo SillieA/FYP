@@ -36,7 +36,10 @@ public class UnconfirmedTx {
 					else{
 						System.out.println(Strings.NoteTxPoolPopulated + queue.size());
 						while(!queue.isEmpty()){
-							c.add(queue.poll());
+							Transaction T = queue.poll();
+							if(Validation.checkTx(T)){
+								c.add(T);
+							}
 						}
 					}
 				}

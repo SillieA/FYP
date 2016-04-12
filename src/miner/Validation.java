@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.List;
 
 import utils.Block;
@@ -24,7 +25,7 @@ public class Validation {
 	public static boolean checkTx(Transaction T){	
 		String[] vals = T.valuesArr();
 		if(checkSyntax(vals) && !isGenTx(vals) && verifySig(vals)){
-
+			return true;
 		}
 		System.out.println("Error: Tx " + T.TxNumber +  " From " + T.From + " has an ERROR from ValidateTx!");
 		return false;
@@ -39,8 +40,6 @@ public class Validation {
 		System.out.println(ref[0] + " has invalid syntax");
 		return false;
 	}
-
-	//makes sure no other transactions have referenced the transaciton
 
 	//5
 	private static boolean isGenTx(String[] T){
@@ -105,43 +104,44 @@ public class Validation {
 		}
 		return true;
 	}
-
+	//--------------------------CHECKS BLOCK
 	public static boolean checkBlock(Block b){
+		if(checkHash(b) && checkTxList(b.TxList,b.TxCount)){
+			return true;
+		}
+		return false;
+	}
+	//checks the Tx in the block, as well as the length mentioned in the header to see if it all matches up
+	private static boolean checkTxList(ArrayList<Transaction> input, int length){
+		if(input.size() != length){
+			return false;
+		}
+		for(Transaction T : input){
+			if(checkTx(T) == false){
+				return false;
+			}
+		}
+		return true;
+	}
+	//checks to see if nonce is correct
+	public static boolean checkHash(Block b){
 		String merkle;
 		String merkleandPBH;
 		String hash;
-		for(int i = BlockChain.MainChain.size(); i>= 0;i--){
-			Block blk = BlockChain.MainChain.get(i);
-			if(blk.hashHeader.equals(b.hashPrevBlock)){
-				merkle = Merkle.root(b.TxList);
-				merkleandPBH = ProofOfWork.sha256(merkle + b.hashPrevBlock);
-				hash = ProofOfWork.sha256(merkleandPBH + b.Nonce);
-				if(hash.startsWith(Strings.Difficulty)){
-					if(BlockChain.MainChain.indexOf(blk) == BlockChain.MainChain.size() - 1){
-						return true;
-					}
-					else{
 
-					}
-				}
-				else{
-					System.out.println(Strings.NoteFalseBlock);
-				}
-
-
-				//H(Merkleroot, PBH, Nonce)
-				//if true....
-				//if anotherblock has the same previous block....
-				//see which one has more 0's in history
-				//dump all tx's back into unconfirmed pool
-				//if false....
-
-			}
+		merkle = Merkle.root(b.TxList);
+		if(!merkle.equals(b.hashMerkleRoot)){
+			System.out.println("Incorrect Merkle Root");
+			return false;
 		}
-
-
-
-
-		return false;
+		merkleandPBH = ProofOfWork.sha256(b.hashMerkleRoot + b.hashPrevBlock);
+		hash = ProofOfWork.sha256(merkleandPBH + b.Nonce);
+		if(!hash.startsWith(Strings.Difficulty)){
+			System.out.println("Incorrect Nonce");
+			return false;
+		}
+		return true;
 	}
 }
+
+

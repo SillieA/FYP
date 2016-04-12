@@ -22,11 +22,9 @@ public class Client {
 	private BufferedReader in;
 	private PrintWriter out;
 	private Socket socket;
-	private String IP;
 
 
 	public Client(final String IP, final int port) {
-		this.IP = IP;
 		Runnable r = new Runnable(){
 			public void run(){
 				try {
@@ -41,7 +39,7 @@ public class Client {
 
 						input = in.readLine();
 
-						System.out.println("Client In: " + input);
+//						System.out.println("Client In: " + input);
 						if(input.isEmpty()|| input.equals(null)||input.equals("")){
 							
 						}
@@ -86,7 +84,7 @@ public class Client {
 		
 	}
 	
-	//provides an interface. 
+	//sorts input to correct methods
 	private void caller(String code, String message){
 		switch(code){
 		case Strings.serverSendDifficulty : receiveDifficulty(message);
@@ -202,7 +200,7 @@ public class Client {
 	private void sendMessage(String message, String source){
 		out.println(message);
 		out.flush();
-		System.out.println("Client Out(" + source + "): ");
+//		System.out.println("Client Out(" + source + "): ");
 	}
 	public void terminateConnection(){
 		sendMessage("TERMINATE","terminate");

@@ -27,7 +27,10 @@ public class Validation {
 		if(checkSyntax(vals) && !isGenTx(vals) && verifySig(vals)){
 			return true;
 		}
-		System.out.println("Error: Tx " + T.TxNumber +  " From " + T.From + " has an ERROR from ValidateTx!");
+		System.out.println("Error: Tx False");
+		System.out.println(String.valueOf(checkSyntax(vals)));
+		System.out.println(String.valueOf(!isGenTx(vals)));
+		System.out.println(String.valueOf(verifySig(vals)));
 		return false;
 	}
 

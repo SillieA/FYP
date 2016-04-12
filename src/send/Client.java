@@ -87,15 +87,14 @@ public class Client {
 	//sorts input to correct methods
 	private void caller(String code, String message){
 		switch(code){
+		//server outputs
 		case Strings.serverSendDifficulty : receiveDifficulty(message);
 		break;
 		case Strings.serverSendBlockChain : receiveBlockChain(message);
 		break;
-		case "BLS" : sendBlockChain();
-		break;
-		case "BLR" : receiveBlockChain(message);
-		break;
+		//Peers
 		case "PER" : receivePeers(message);
+		break;
 		}
 	}
 	//inputs

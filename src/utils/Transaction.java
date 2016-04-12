@@ -44,15 +44,15 @@ public class Transaction {
 	public String values(){
 		return TxNumber + " " + From + " " + To + " " + Token + " " + RefTx;
 	}
-	public String valuesNoSpace(){
-		return TxNumber + From + To + Token + RefTx;
+	public String valuesForSignature(){
+		return From + To + Token + RefTx;
 	}
 	public String[] valuesArr(){
 		String[] s = {TxNumber, From, To,Token,RefTx};
 		return s;
 	}
 	public void generateReference(){
-		String hash = ProofOfWork.sha256(valuesNoSpace());
+		String hash = ProofOfWork.sha256(valuesForSignature());
 		try {
 			TxNumber = Main.keyClass.privateKeySign(hash);
 		} catch (InvalidKeyException e) {

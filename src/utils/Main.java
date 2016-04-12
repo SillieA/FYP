@@ -11,12 +11,8 @@ import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import devices.TxGenerator;
 import devices.TokenFinder;
-import devices.table;
+import devices.TxGenerator;
 import miner.UnconfirmedTx;
 import peers.Peers;
 import server.Server;
@@ -35,33 +31,37 @@ public class Main {
 		//args[0] = role
 		//args[1] = number of communications to send
 		//args[2] = token Name
-		if(args[0].equals("Miner") || args[0].equals("Node")){
-			Strings.Role = args[0];
-		}
-		keyCheck();
-		System.out.println(keyClass.returnPublicKey(keyP));
-		P = new Peers();
+//		if(args.length == 3){
+//			if(args[0].equals("Miner") || args[0].equals("Node")){
+//				Strings.Role = args[0];
+//			}
+			Strings.Role = "Miner";
+			keyCheck();
+			System.out.println(keyClass.returnPublicKey(keyP));
+			P = new Peers();
 
-		new BlockChain();
-		if(Strings.Role.equals("Miner")){
-			new UnconfirmedTx();
-		}
-		BlockChain.initialiseChain();
-		new TokenFinder();
-//		GUITest();
-		new TxGenerator(Integer.parseInt(args[1]),args[2]);
-		startServer();//starts server
+			new BlockChain();
+			if(Strings.Role.equals("Miner")){
+				new UnconfirmedTx();
+			}
+			BlockChain.initialiseChain();
+			new TokenFinder();
+//			new TxGenerator(Integer.parseInt(args[1]),args[2]);
+			new TxGenerator(Integer.parseInt("1000"),"DeviceTwo");
+//			GUITest();
+			startServer();//starts server
+//		}
 	}
-	//starts the server to listen for connections
-	public static void GUITest(){
-
-		System.out.println("table thread started");
-		table gui = new table();
-		gui.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		gui.setSize(800,400);
-		gui.setVisible(true);
-		gui.setTitle("table");
-	}
+	//starts the gui which shows the blockchain in a window (windows only)
+//	public static void GUITest(){
+//
+//		System.out.println("table thread started");
+//		table gui = new table();
+//		gui.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+//		gui.setSize(800,400);
+//		gui.setVisible(true);
+//		gui.setTitle("table");
+//	}
 	public static void startServer(){
 		Thread t = new Thread() {
 		    public void run() {

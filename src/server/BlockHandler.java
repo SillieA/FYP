@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import miner.Validation;
-import peers.Node;
-import send.Client;
 import utils.Block;
 import utils.BlockChain;
 import utils.Strings;

@@ -36,7 +36,8 @@ public class TxGenerator {
 //						e.printStackTrace();
 //					}
 					String tkn = tokenName + String.valueOf(i);
-					Node n = Peers.getRandomNode();
+//					Node n = Peers.getRandomNode();
+					Node n = new Node("127.0.0.1", Main.keyClass.returnPublicKey(Main.keyP),Strings.Role);
 					Transaction T = new Transaction(null, Main.keyClass.returnPublicKey(Main.keyP),n.PK,tkn,Strings.Genesis);
 					T.generateReference();
 					String[] Str = new String[]{T.Token,String.valueOf(System.currentTimeMillis())};

@@ -2,11 +2,11 @@ package miner;
 
 import java.util.ArrayList;
 
+import core.Block;
+import core.BlockChain;
+import core.Strings;
+import core.Transaction;
 import send.BroadcastBlock;
-import utils.Block;
-import utils.BlockChain;
-import utils.Strings;
-import utils.Transaction;
 
 public class BlockBuilder {
 	
@@ -37,15 +37,17 @@ public class BlockBuilder {
 						String prevBlockHash = BlockChain.latestBlockHeader();
 						System.out.println("Started building block after " + prevBlockHash);
 						String merkle = Merkle.root(txLista);
-                                               
+						//PROOF OF WORK - WHERE BLOCKS ARE MADE
 						int[] difficultyNonce = ProofOfWork.find(merkle + prevBlockHash);
 						Block b = new Block(txLista, merkle,difficultyNonce[1] , prevBlockHash,difficultyNonce[0]);
 
-						System.out.println(b.hashHeader + "Created!");
+						System.out.println("Block number " + String.valueOf(BlockChain.MainChain.size() + 1) + " Created!");
+						//broadcast block
 						new BroadcastBlock(b);
-						//take used tx out of pool
+						
 						if(b.hashPrevBlock.equals(BlockChain.latestBlockHeader())){
 							BlockChain.MainChain.add(b);
+							//cut off txs used in this block
 							for(int i = txLista.size()-1; i >= 0 ;i--){
 								TxList.remove(i);
 							}

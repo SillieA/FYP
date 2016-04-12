@@ -2,7 +2,7 @@ package miner;
 
 import java.util.ArrayList;
 
-import utils.Transaction;
+import core.Transaction;
 
 public class Merkle {
 	public static String root(ArrayList<Transaction> Tx){

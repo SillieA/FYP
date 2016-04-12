@@ -1,25 +1,15 @@
-package utils;
+package core;
 
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 public class GenesisBlock {
 	public static void checkBlockChain(){
-		//if peer server = empty
-
-		int input = JOptionPane.showConfirmDialog(
-				null,
-				Strings.NoteMissingBlockchain,
-				Strings.NoteMissingBlockchainTitle,
-				JOptionPane.YES_NO_OPTION);
-		if(input == JOptionPane.YES_OPTION){
+		//if miner, create genesis block. otherwise wait for blockchain to be received from peers.
+		if(Strings.Role.equals("Miner")){
 			createGenesisBlock();
 			BlockChain.saveBlockChain();
 		}
-		else if(input == JOptionPane.NO_OPTION){
-			//get some blocks from other nodes.
-			//if no nodes are found, print error
-		}
+
 	}
 	
 	private static void createGenesisBlock(){

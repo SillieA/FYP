@@ -4,53 +4,68 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import core.Main;
+import core.Strings;
+import core.Transaction;
 import miner.UnconfirmedTx;
 import peers.Node;
 import peers.Peers;
 import send.BroadcastTx;
-import utils.BlockChain;
-import utils.Main;
-import utils.Strings;
-import utils.Transaction;
 
 public class TxGenerator {
 	
 	
-	ArrayList<String[]> createdTx;
+	ArrayList<TimeStampedToken> createdTx;
 	
-	public TxGenerator(final int repeats,final String tokenName){
+	public TxGenerator(final int repeats,final String tokenName, final int interval){
 		
-		createdTx = new ArrayList<String[]>();
+		createdTx = new ArrayList<TimeStampedToken>();
 		Thread t = new Thread(){
 			public void run(){
-				System.out.println("Device 1 started");
+				System.out.println("TxGenerator started");
+				Transaction T;
+				//on start up, wait 11 seconds before starting
 				try {
 					Thread.sleep(11000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				//create specified number of tokens
 				for(int i = 0; i<repeats;i++){
-//					try {
-//						Thread.sleep(20);
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
+					//sleep for defined interval
+					try {
+						Thread.sleep(interval);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					//create token with specified name, appending the iteration number
 					String tkn = tokenName + String.valueOf(i);
-//					Node n = Peers.getRandomNode();
-					Node n = new Node("127.0.0.1", Main.keyClass.returnPublicKey(Main.keyP),Strings.Role);
-					Transaction T = new Transaction(null, Main.keyClass.returnPublicKey(Main.keyP),n.PK,tkn,Strings.Genesis);
+					//if node, create token
+					if(Strings.Role.equals("Node")){
+						Node n = Peers.getRandomNode();
+						T = new Transaction(null, Main.keyClass.returnPublicKey(Main.keyP),n.PK,tkn,Strings.Genesis);
+					}
+					//if miner, create orphan txs (no-one receives)
+					else{
+						T = new Transaction(null, Main.keyClass.returnPublicKey(Main.keyP),"ORPHAN",tkn,Strings.Genesis);
+					}
 					T.generateReference();
-					String[] Str = new String[]{T.Token,String.valueOf(System.currentTimeMillis())};
-					createdTx.add(Str);
+					//add token to created tokens list
+					TimeStampedToken tok = new TimeStampedToken(T.Token);
+					createdTx.add(tok);
+					//broadcastTx
 					new BroadcastTx(T);
+					//miners add to local pool
 					if(Strings.Role.equals("Miner"))UnconfirmedTx.push(T);
 				}
+				//wait a minute to print created tx
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(60000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				txSendTime();
+				TokenFinder.saveTimestamps();
 			}
 		};
 		t.start();
@@ -58,11 +73,12 @@ public class TxGenerator {
 	//saves time Tx were sent to file
 		public void txSendTime(){
 			try {
+				System.out.println("Saving Token Send times");
 				
-				FileWriter writer = new FileWriter(Strings.FileSentTokens, true);
+				FileWriter writer = new FileWriter(Strings.FileSentTokens);
 				writer.write(String.valueOf(System.currentTimeMillis()) + "\r\n");
-				for(String[] s : createdTx){
-					writer.write(s[0] + " " + s[1] + "\r\n");
+				for(TimeStampedToken t : createdTx){
+					writer.write(t.ValuesForPrint() + "\r\n");
 				}
 				writer.close();
 				

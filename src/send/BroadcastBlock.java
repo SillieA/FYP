@@ -1,16 +1,17 @@
 package send;
 
+import core.Block;
+import core.Strings;
 import peers.Node;
 import peers.Peers;
-import utils.Block;
-import utils.Strings;
 
 public class BroadcastBlock {
 //send new block to all connections
 	Client c;
 	public BroadcastBlock(Block b){
 //		System.out.println("Broadcasting Block");
-		for(Node p : Peers.arr){
+		for(int i = 0; i < Peers.arr.size();i++){
+			Node p = Peers.arr.get(i);
 			this.c = new Client(p.IP, Strings.ServerPort);
 			try {
 				Thread.sleep(1500);
@@ -21,7 +22,6 @@ public class BroadcastBlock {
 				c.sendBlock(b);
 			}catch(NullPointerException e){
 				System.out.println("Could not connect to : " + p.IP);
-				c.terminateConnection();
 			}
 		}
 	}

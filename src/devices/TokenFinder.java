@@ -4,36 +4,36 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import utils.Block;
-import utils.BlockChain;
-import utils.Main;
-import utils.Strings;
-import utils.Transaction;
+import core.Block;
+import core.BlockChain;
+import core.Main;
+import core.Strings;
+import core.Transaction;
 
 public class TokenFinder {
 	
-	ArrayList<Transaction> receivedTx;
-	ArrayList<Long> receivedTime;
+
+	static ArrayList<TimeStampedToken> receivedTokens;
 	
 	public TokenFinder(){
-		receivedTx = new ArrayList<Transaction>();
-		receivedTime = new ArrayList<Long>();
+
+		receivedTokens = new ArrayList<TimeStampedToken>();
 		Thread t = new Thread(){
 			public void run(){
 				int chainLength = 0;//used to check whether blockchain has changed length. if it has, the program will check for tokens
 				int newChainLength;
+				//stores discoveredtx
 				ArrayList<Transaction> ownedTx;
 				while(true){
 					if(BlockChain.MainChain.size() != chainLength){
 						newChainLength = BlockChain.MainChain.size();
-						ownedTx = new ArrayList<Transaction>(findTokens(chainLength, newChainLength));
+						ownedTx = new ArrayList<Transaction>(findTokens());
 						timestamp(ownedTx);
 						chainLength = newChainLength;
 					}
 					else{
 						try {
-							Thread.sleep(2000);
-							saveTimestamps();
+							Thread.sleep(1000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -44,22 +44,27 @@ public class TokenFinder {
 		t.start();
 	}
 	
-	//searches the blockchain for 
-	public ArrayList<Transaction> findTokens(int start, int fin){
+	//searches the blockchain for received tokens
+	public ArrayList<Transaction> findTokens(){
+		//create return array
 		ArrayList<Transaction> ownedTxArr = new ArrayList<Transaction>();
+		//return public key;
 		String pubk = Main.keyClass.returnPublicKey(Main.keyP);
 		Block b;
-		if(BlockChain.MainChain.size() > 9){
-			for(int i = fin - 7; i > start - 7; i--){
+		//if blockchain is big enough to be searched
+		int chainLength = BlockChain.MainChain.size();
+		if(chainLength > 7){
+			for(int i = 0; i > chainLength - 7; i++){
 				b = BlockChain.MainChain.get(i);
 				for(Transaction T : b.TxList){
 					if(T.To.equals(pubk)){
 						ownedTxArr.add(T);
 					}
 				}
-				//			if(b.gen.To.equals(pubk)){
-				//				ownedTxArr.add(b.gen);
-				//			}
+
+				if(b.gen.To.equals(pubk)){
+					ownedTxArr.add(b.gen);
+				}
 			}
 			System.out.println("Found " + String.valueOf(ownedTxArr.size()) + " Tokens");
 		}
@@ -69,7 +74,7 @@ public class TokenFinder {
 		
 		return ownedTxArr;
 	}
-	//returns unspent transactions from a list of transactions
+	//returns unspent transactions from a list of transactions. currently UNUSED, would be used in real life implementation.
 	public ArrayList<Transaction> spendableTx(ArrayList<Transaction> txArr){
 		ArrayList<Transaction> spendableTx = new ArrayList<Transaction>();
 		for(Transaction T : txArr){
@@ -83,31 +88,43 @@ public class TokenFinder {
 		}
 		return spendableTx;
 	}
-	public ArrayList<Transaction> ownedTx(ArrayList<Transaction> txArr){
-		ArrayList<Transaction> ownedTx = new ArrayList<Transaction>();
-		for(Transaction T : txArr){
-			if(T.To.equals(Main.keyClass.returnPublicKey(Main.keyP))){
-				ownedTx.add(T);
+//	public ArrayList<Transaction> ownedTx(ArrayList<Transaction> txArr){
+//		ArrayList<Transaction> ownedTx = new ArrayList<Transaction>();
+//		for(Transaction T : txArr){
+//			if(T.To.equals(Main.keyClass.returnPublicKey(Main.keyP))){
+//				ownedTx.add(T);
+//			}
+//		}
+//		return ownedTx;
+//	}
+
+	public void timestamp(ArrayList<Transaction> txarr ){
+		TimeStampedToken timedToken;
+		String token;
+		for(Transaction T : txarr){
+			token = T.Token;
+			if(stampCheck(token)){
+				timedToken = new TimeStampedToken(token);
+				receivedTokens.add(timedToken);
 			}
 		}
-		return ownedTx;
-	}
-	public void timestamp(ArrayList<Transaction> txarr ){
-		String[] timeToken = new String[2];
-		for(Transaction T : txarr){
-				timeToken[1] = String.valueOf(System.currentTimeMillis());
-				timeToken[0] = T.Token;
-				receivedTx.add(T);
-				receivedTime.add(System.currentTimeMillis());
+	}	
+	//checks to see if token has already been stamped. returns false if it has
+	public boolean stampCheck(String tok){
+		for(TimeStampedToken t : receivedTokens){
+			if(t.token.equals(tok)){
+				return false;
 			}
-		
+		}
+		return true;
 	}
 	//save time txs were received
-	public void saveTimestamps(){
+	public static void saveTimestamps(){
 		try {
+			System.out.println("Saving received token times");
 			FileWriter writer = new FileWriter(Strings.FileTimeStamp);
-			for(int i = 0; i < receivedTx.size();i++){
-				writer.write(receivedTx.get(i).Token + " " + String.valueOf(receivedTime.get(i)) + "\r\n");
+			for(int i = 0; i < receivedTokens.size();i++){
+				writer.write(receivedTokens.get(i).ValuesForPrint() + "\r\n");
 			}
 			writer.close();
 		

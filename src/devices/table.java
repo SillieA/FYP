@@ -7,8 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import utils.Block;
-import utils.BlockChain;
+import core.Block;
+import core.BlockChain;
 
 public class table extends JFrame {
 

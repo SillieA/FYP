@@ -8,33 +8,33 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import core.Block;
+import core.BlockChain;
+import core.Strings;
+import core.Transaction;
 import miner.UnconfirmedTx;
-import utils.Block;
-import utils.BlockChain;
-import utils.Strings;
-import utils.Transaction;
 
 public class Server {
 	public static void initialise(int port) throws Exception {
 		System.out.println("Server is running.");
-		ServerSocket listener = new ServerSocket(port);
+		ServerSocket serverSocket = new ServerSocket(port);
 		try {
 			while (true) {
-				new Connector(listener.accept()).start();
+				new Connector(serverSocket.accept()).start();
 			}
 		} finally {
-			listener.close();
+			serverSocket.close();
 		}
 	}
 
 	private static class Connector extends Thread {
 		private Socket socket;
-		private String clientIP;
+//		private String clientIP;
 		private PrintWriter out;
 
 		public Connector(Socket socket) {
 			this.socket = socket;
-			this.clientIP = socket.getInetAddress().toString().substring(1);
+//			this.clientIP = socket.getInetAddress().toString().substring(1);
 //			System.out.println(clientIP);
 //			System.out.println("New connection with client at " + socket);
 		}
@@ -75,7 +75,7 @@ public class Server {
 				} catch (IOException e) {
 					System.out.println("Couldn't close a socket, what's going on?");
 				}
-				System.out.println("Connection: " + clientIP + " closed");
+//				System.out.println("Connection: " + clientIP + " closed");
 			}
 		}
 		public void caller(String code, String message){

@@ -1,6 +1,6 @@
 //This class initialises the threads and performs some preliminary checks
 
-package utils;
+package core;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,13 +31,13 @@ public class Main {
 		//args[0] = role
 		//args[1] = number of communications to send
 		//args[2] = token Name
-//		if(args.length == 3){
-//			if(args[0].equals("Miner") || args[0].equals("Node")){
-//				Strings.Role = args[0];
-//			}
-			Strings.Role = "Miner";
+		//args[3] = interval time ms
+		if(args.length == 4){
+			if(args[0].equals("Miner") || args[0].equals("Node")){
+				Strings.Role = args[0];
+			}
 			keyCheck();
-			System.out.println(keyClass.returnPublicKey(keyP));
+//			System.out.println(keyClass.returnPublicKey(keyP));
 			P = new Peers();
 
 			new BlockChain();
@@ -46,11 +46,10 @@ public class Main {
 			}
 			BlockChain.initialiseChain();
 			new TokenFinder();
-//			new TxGenerator(Integer.parseInt(args[1]),args[2]);
-			new TxGenerator(Integer.parseInt("1000"),"DeviceTwo");
+			new TxGenerator(Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]));
 //			GUITest();
 			startServer();//starts server
-//		}
+		}
 	}
 	//starts the gui which shows the blockchain in a window (windows only)
 //	public static void GUITest(){

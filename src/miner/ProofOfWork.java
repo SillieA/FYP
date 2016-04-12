@@ -2,7 +2,7 @@ package miner;
 
 import java.security.MessageDigest;
 
-import utils.Strings;
+import core.Strings;
 
 public class ProofOfWork {
 	public static int[] find(String input){

@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import utils.BlockChain;
-import utils.Strings;
-import utils.Transaction;
+import core.Strings;
+import core.Transaction;
 
 public class UnconfirmedTx {
 	//whenever a broadcast is received, add it to the queue
@@ -27,7 +26,6 @@ public class UnconfirmedTx {
 					if(queue.isEmpty()){
 						try {
 							Thread.sleep(3000);
-							BlockChain.saveBlockChain();
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 							System.out.println(Strings.ErrorThreadWait);

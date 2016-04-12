@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import core.BlockChain;
+import core.Main;
+import core.Strings;
 import miner.ProofOfWork;
 import send.Client;
-import utils.Main;
-import utils.Strings;
 
 public class Peers {
 	public static List<Node> arr;
@@ -33,10 +34,12 @@ public class Peers {
 						printPeers();
 						
 						Thread.sleep(60000);
+						
+						System.out.println("Saving blockchain...");
+						BlockChain.saveBlockChain();
 					}
 				}catch(Exception e){
 					System.out.println("Could not connect to Peer server. Ensure server is running and restart program.");
-					e.printStackTrace();
 				}
 			}
 		};
@@ -98,6 +101,10 @@ public class Peers {
 	public static Node getRandomNode(){
 		Random r = new Random();
 		while(true){
+			if(arr.size() == 0){
+			//if empty, just return self as node so this client doesnt spam itself with transactions
+				return new Node("127.0.0.1", Main.keyClass.returnPublicKey(Main.keyP), "Node");
+			}
 			int rand = r.nextInt(arr.size());
 			if(arr.get(rand).Type.equals("Node")){
 				return arr.get(rand);

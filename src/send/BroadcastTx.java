@@ -1,8 +1,8 @@
 package send;
 
+import core.Transaction;
 import peers.Node;
 import peers.Peers;
-import utils.Transaction;
 
 public class BroadcastTx {
 	//sends Tx to every peer on the network
@@ -25,16 +25,15 @@ public class BroadcastTx {
 						C.sendTx(T);
 						//					System.out.println("Message sent");
 					}catch(NullPointerException e){
-						System.out.println("Unable to connect to : " + str);
-						C.terminateConnection();
+//						System.out.println("Unable to connect to : " + str);
 					}
 				}
 
 			}
 		}
 		catch(Exception e){
-			e.printStackTrace();
-			System.out.println("Error connecting to " + str);
+//			e.printStackTrace();
+//			System.out.println("Error connecting to " + str);
 		}
 	}
 }

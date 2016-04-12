@@ -4,18 +4,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import core.Block;
+import core.BlockChain;
+import core.Main;
+import core.Strings;
+import core.Transaction;
 import peers.Peers;
 import server.BlockHandler;
-import utils.Block;
-import utils.BlockChain;
-import utils.Main;
-import utils.Strings;
-import utils.Transaction;
 
 public class Client {
 
@@ -58,7 +59,7 @@ public class Client {
 					}
 
 				}while(!input.contains("TERMINATE"));
-				System.out.println("Connection Terminated with " + IP);
+//				System.out.println("Connection Terminated with " + IP);
 				try {
 					socket.close();
 				} catch (IOException e) {
@@ -74,12 +75,15 @@ public class Client {
 	public void connectToServer(String serverAddress, int serverPort) throws IOException {
 
 		// Make connection and initialize streams
-		System.out.println(serverAddress + String.valueOf(serverPort));
+//		System.out.println(serverAddress + String.valueOf(serverPort));
+		try{
 		socket = new Socket(serverAddress, serverPort);
 		in = new BufferedReader(
 				new InputStreamReader(socket.getInputStream()));
 		out = new PrintWriter(socket.getOutputStream(), true);
-		
+		}catch(ConnectException e){
+			
+		}
 //		System.out.println("Connected to " + serverAddress + ":" + String.valueOf(serverPort));
 		
 	}
@@ -115,7 +119,7 @@ public class Client {
 			bh.altChain.clear();
 		}
 		
-		bh.printChain();
+//		bh.printChain();
 		terminateConnection();
 	}
 	private void receiveDifficulty(String message) {

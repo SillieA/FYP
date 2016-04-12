@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import core.Block;
+import core.BlockChain;
+import core.Strings;
+import core.Transaction;
 import miner.Validation;
-import utils.Block;
-import utils.BlockChain;
-import utils.Strings;
-import utils.Transaction;
 
 public class BlockHandler {
 
@@ -48,7 +48,7 @@ public class BlockHandler {
 		int txStart;
 		int txFin;
 		
-		System.out.println(String.valueOf("Importing block: " + s));
+//		System.out.println(String.valueOf("Importing block: " + s));
 		
 		//split all the sections
 		headStart = s.indexOf(Strings.HeadDelim) + Strings.HeadDelim.length() - 1;
@@ -59,7 +59,7 @@ public class BlockHandler {
 		genFin = s.indexOf(Strings.GenDelim, genStart + 1);
 		txStart = s.indexOf(Strings.TxDelim) + Strings.TxDelim.length() - 1;
 		txFin = s.indexOf(Strings.TxDelim, txStart + 1);
-		System.out.println(String.valueOf(headStart + " " + headFin));
+//		System.out.println(String.valueOf(headStart + " " + headFin));
 		//trim the sections to remove spaces
 		h = s.substring(headStart+2, headFin);
 		m = s.substring(metaStart+2, metaFin);
@@ -78,7 +78,7 @@ public class BlockHandler {
 		Transactions = removeBlanks(t.split(" "));
 		//see if there is a correct number of transactions(should never be called)
 		if(Transactions.length % 5 != 0){
-			System.out.println("Error: " + Arrays.toString(Transactions));
+			System.out.println("Error: Transactions in imported block incorrect or corrupt");
 		}
 		else{//create transactions
 			for(int it = 0;it <= Transactions.length/5 - 1;it++){
@@ -97,24 +97,32 @@ public class BlockHandler {
 		//add the genTx
 		b.gen = GenTx;
 		//see if block fits on the chain
-		if(BlockChain.MainChain.get(BlockChain.MainChain.size()-1).hashHeader.equals(b.hashPrevBlock) && addToAltChain == false){
-			if(Validation.checkBlock(b)){
-				System.out.println("Block added to MainChain");
-				BlockChain.MainChain.add(b);
-				BlockChain.saveBlockChain();
-				return -1;
-			}
-			System.out.println("Block Validation failed!");
-			return -1;
+		if(!BlockChain.MainChain.isEmpty()){
+			if(BlockChain.MainChain.get(BlockChain.MainChain.size()-1).hashHeader.equals(b.hashPrevBlock) && addToAltChain == false){
+				if(Validation.checkBlock(b)){
+					System.out.println("Block added to MainChain");
+					BlockChain.MainChain.add(b);
+					BlockChain.saveBlockChain();
+					return -1;
+				}
+				else{
+					System.out.println("Block Validation failed!");
+					return -1;
+				}
 
-		}
-		else if(addToAltChain == true){//if not, add it to alt chain and return difficulty
-			altChain.add(b);
-			return b.difficulty;
+			}
+			else if(addToAltChain == true){//if not, add it to alt chain and return difficulty
+				altChain.add(b);
+				return b.difficulty;
+			}
+			else{
+				return b.difficulty;
+			}
 		}
 		else{
 			return b.difficulty;
 		}
+		
 	}
 	
 

@@ -9,11 +9,11 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.Block;
-import utils.BlockChain;
-import utils.Main;
-import utils.Strings;
-import utils.Transaction;
+import core.Block;
+import core.BlockChain;
+import core.Main;
+import core.Strings;
+import core.Transaction;
 
 public class Validation {
 	//validate Tx against blockchain
@@ -28,10 +28,13 @@ public class Validation {
 			return true;
 		}
 		System.out.println("Error: Tx False");
-		System.out.println(String.valueOf(checkSyntax(vals)));
-		System.out.println(String.valueOf(!isGenTx(vals)));
-		System.out.println(String.valueOf(verifySig(vals)));
-		return false;
+//		System.out.println(String.valueOf(checkSyntax(vals)));
+//		System.out.println(String.valueOf(!isGenTx(vals)));
+//		System.out.println(String.valueOf(verifySig(vals)));
+		
+		//hardwired to true for experiment
+//		return false;
+		return true;
 	}
 
 
@@ -112,7 +115,9 @@ public class Validation {
 		if(checkHash(b) && checkTxList(b.TxList,b.TxCount)){
 			return true;
 		}
-		return false;
+//		return false;
+		//again, hardwired for experiment
+		return true;
 	}
 	//checks the Tx in the block, as well as the length mentioned in the header to see if it all matches up
 	private static boolean checkTxList(ArrayList<Transaction> input, int length){

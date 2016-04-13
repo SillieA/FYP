@@ -68,7 +68,7 @@ public class BlockChain {
 			try{
 				initialiseChain();
 			}catch(IOException IOE){
-				System.out.println(IOE.toString());
+				IOE.printStackTrace();
 			}
 			try{
 				b = MainChain.get(MainChain.size()-1);

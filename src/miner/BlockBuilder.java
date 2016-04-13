@@ -43,10 +43,11 @@ public class BlockBuilder {
 
 						System.out.println("Block number " + String.valueOf(BlockChain.MainChain.size() + 1) + " Created!");
 						//broadcast block
-						new BroadcastBlock(b);
+						
 						
 						if(b.hashPrevBlock.equals(BlockChain.latestBlockHeader())){
 							BlockChain.MainChain.add(b);
+							new BroadcastBlock(b);
 							//cut off txs used in this block
 							for(int i = txLista.size()-1; i >= 0 ;i--){
 								TxList.remove(i);

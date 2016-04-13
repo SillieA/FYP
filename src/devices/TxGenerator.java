@@ -47,7 +47,8 @@ public class TxGenerator {
 					}
 					//if miner, create orphan txs (no-one receives)
 					else{
-						T = new Transaction(null, Main.keyClass.returnPublicKey(Main.keyP),"ORPHAN",tkn,Strings.Genesis);
+						Node n = new Node("me",Main.keyClass.returnPublicKey(Main.keyP),"Miner" );
+						T = new Transaction(null, Main.keyClass.returnPublicKey(Main.keyP),n.PK,tkn,Strings.Genesis);
 					}
 					T.generateReference();
 					//add token to created tokens list

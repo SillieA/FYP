@@ -184,9 +184,6 @@ public class Client {
 				if(ret.length == 3){
 					Peers.addPeers(ret);
 				}
-				else{
-					System.out.println("Message length exception : " + Arrays.toString(ret));
-				}
 			}
 		}
 		sendMessage(".","RecPeers");

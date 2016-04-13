@@ -96,42 +96,39 @@ public class BlockHandler {
 		b = new Block(Header, Meta, txArr);
 		//add the genTx
 		b.gen = GenTx;
-		//see if block fits on the chain
-		if(!BlockChain.MainChain.isEmpty()){
-			if(BlockChain.MainChain.get(BlockChain.MainChain.size()-1).hashHeader.equals(b.hashPrevBlock) && addToAltChain == false){
-				if(Validation.checkBlock(b)){
-					System.out.println("Block added to MainChain");
-					BlockChain.MainChain.add(b);
-					BlockChain.saveBlockChain();
-					return -1;
-				}
-				else{
-					System.out.println("Block Validation failed!");
-					return -1;
-				}
+		//avoid error thrown when chain is empty
 
-			}
-			else if(addToAltChain == true){//if not, add it to alt chain and return difficulty
-				altChain.add(b);
-				return b.difficulty;
+		//see if block fits on the chain
+		if(BlockChain.MainChain.get(BlockChain.MainChain.size()-1).hashHeader.equals(b.hashPrevBlock) && addToAltChain == false){
+			if(Validation.checkBlock(b)){
+				System.out.println("Block added to MainChain");
+				BlockChain.MainChain.add(b);
+				BlockChain.saveBlockChain();
+				return -1;
 			}
 			else{
-				return b.difficulty;
+				System.out.println("Block Validation failed!");
+				return -1;
 			}
+
 		}
-		else{
+		else if(addToAltChain == true){//if not, add it to alt chain and return difficulty
+			altChain.add(b);
 			return b.difficulty;
 		}
-		
+		else{
+			
+			return b.difficulty;
+		}
+
+
 	}
 	
-
 
 	public void printChain(){
 		for(int i = 0; i < altChain.size(); i++){
 			System.out.println(altChain.get(i).allValues());
 		}
-
 	}
 	public boolean containsLetters(String s) {
 		char[] chars = s.toCharArray();

@@ -53,15 +53,19 @@ public class TokenFinder {
 		Block b;
 		//if blockchain is big enough to be searched
 		int chainLength = BlockChain.MainChain.size();
+//		System.out.println(String.valueOf(chainLength));
 		if(chainLength > 7){
-			for(int i = 0; i > chainLength - 7; i++){
+			for(int i = 0; i < chainLength - 7; i++){
 				b = BlockChain.MainChain.get(i);
 				for(Transaction T : b.TxList){
 					if(T.To.equals(pubk)){
 						ownedTxArr.add(T);
 					}
+//					System.out.println();
+//					System.out.println(pubk);
+//					System.out.println(T.To);
+//					System.out.println();
 				}
-
 				if(b.gen.To.equals(pubk)){
 					ownedTxArr.add(b.gen);
 				}
@@ -88,15 +92,6 @@ public class TokenFinder {
 		}
 		return spendableTx;
 	}
-//	public ArrayList<Transaction> ownedTx(ArrayList<Transaction> txArr){
-//		ArrayList<Transaction> ownedTx = new ArrayList<Transaction>();
-//		for(Transaction T : txArr){
-//			if(T.To.equals(Main.keyClass.returnPublicKey(Main.keyP))){
-//				ownedTx.add(T);
-//			}
-//		}
-//		return ownedTx;
-//	}
 
 	public void timestamp(ArrayList<Transaction> txarr ){
 		TimeStampedToken timedToken;

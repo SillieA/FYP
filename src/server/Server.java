@@ -154,9 +154,9 @@ public class Server {
 			int difficulty = 0;
 			String[] Blocks = message.split(Strings.BlockDelim);
 			int currentDifficulty;
-			for(String str : Blocks){
-				System.out.println(str);
-			}
+//			for(String str : Blocks){
+//				System.out.println(str);
+//			}
 			for(String str : Blocks){
 				if(!bh.containsLetters(str)){
 					difficulty += bh.blockReceive(str,true);
@@ -164,7 +164,7 @@ public class Server {
 				
 			}
 			currentDifficulty = BlockChain.chainDifficulty();
-			System.out.println("DIFF------ NEW: " + String.valueOf(difficulty) + "OLD: " + String.valueOf(currentDifficulty));
+			System.out.println("DIFF------ NEW: " + String.valueOf(difficulty) + " OLD: " + String.valueOf(currentDifficulty));
 
 			if(difficulty > currentDifficulty){
 				BlockChain.MainChain = new ArrayList<Block>(bh.altChain);

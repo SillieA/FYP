@@ -4,11 +4,10 @@ import java.util.ArrayList;
 
 public class GenesisBlock {
 	public static void checkBlockChain(){
-		//if miner, create genesis block. otherwise wait for blockchain to be received from peers.
-		if(Strings.Role.equals("Miner")){
-			createGenesisBlock();
-			BlockChain.saveBlockChain();
-		}
+		//if blockchain is empty, create one.
+		createGenesisBlock();
+		BlockChain.saveBlockChain();
+
 
 	}
 	

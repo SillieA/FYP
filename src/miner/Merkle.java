@@ -16,7 +16,7 @@ public class Merkle {
 		return Hashes.get(0);
 
 	}
-	//never touch again!*******************
+	//returns merkle root of input transactions.
 	private static ArrayList<String> reHash(ArrayList<String> Hashes){
 		String s;
 		int i;

@@ -6,6 +6,7 @@ import java.util.Random;
 import miner.ProofOfWork;
 
 public class Strings {
+	//collection of strings used in the program. also storage for global variables, such as the IP of the Peers Server.
 	
 	//words used by terminal, human facing
 	final public static String NoteServerUp = "Server Started Successfully";

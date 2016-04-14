@@ -15,6 +15,7 @@ public class BlockChain {
 	public BlockChain(){
 		MainChain = new ArrayList<Block>();
 	}
+	//initialises the chain on program startup
 	public static void initialiseChain() throws IOException{
 		File f = new File(Strings.FileBlockChain);
 		if(f.exists() && !f.isDirectory()) { 
@@ -25,6 +26,7 @@ public class BlockChain {
 			GenesisBlock.checkBlockChain();
 		}
 	}
+	//returns total difficulty of chain
 	public static int chainDifficulty(){
 		int dif = 0;
 		int temp;
@@ -34,30 +36,13 @@ public class BlockChain {
 		}
 		return dif;
 	}
-	
+	//prints chain for debugging purposes
 	public static void printChain(){
 		for(int i = 0; i < MainChain.size(); i++){
 			System.out.println(MainChain.get(i).allValues());
 		}
 	}
-	public static String chainAsString(){
-		String s = "";
-		for(int i = 0; i < MainChain.size(); i++){
-			s += "##" + MainChain.get(i).allValues();
-		}
-		return s;
-	}
-	public static String[] getHeaders(){
-		List<String> headers = new ArrayList<String>(MainChain.size());
-		String[] ret;
-		for(Block b : MainChain){
-			headers.add(b.hashHeader);
-		}
-		ret = new String[headers.size()];
-		ret = headers.toArray(ret);
-		return ret;
-	}
-
+	//returns most recent block header
 	public static String latestBlockHeader(){
 		//will not work if there is no origin block
 		Block b;
@@ -95,6 +80,7 @@ public class BlockChain {
 				ioException.printStackTrace();
 			}
 	}
+	//loads block chain from directory
 	private static void loadBlockChain() throws IOException{
 		try(BufferedReader br = new BufferedReader(new FileReader(Strings.FileBlockChain))) {
 			String line = br.readLine();

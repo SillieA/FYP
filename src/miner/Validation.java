@@ -24,17 +24,18 @@ public class Validation {
 	//check forwards to see if its been sent again
 	public static boolean checkTx(Transaction T){	
 		String[] vals = T.valuesArr();
-		if(checkSyntax(vals) && !isGenTx(vals) && verifySig(vals)){
+		if(checkSyntax(vals) && !isGenTx(vals) && verifySig(vals) && referenceChecker(vals) ){
 			return true;
 		}
-//		System.out.println("Error: Tx False");
-//		System.out.println(String.valueOf(checkSyntax(vals)));
-//		System.out.println(String.valueOf(!isGenTx(vals)));
-//		System.out.println(String.valueOf(verifySig(vals)));
+		System.out.println("Error: Tx False ");
+		System.out.print(String.valueOf(checkSyntax(vals)));
+		System.out.print(String.valueOf(!isGenTx(vals)));
+		System.out.print(String.valueOf(verifySig(vals)));
+		System.out.println();
+//		System.out.println(T.values());
 		
-		//hardwired to true for experiment
-//		return false;
-		return true;
+		return false;
+
 	}
 
 
@@ -56,26 +57,38 @@ public class Validation {
 	}
 	//8 & 9
 	static boolean referenceChecker(String[] ref){//returns false if another transaction has the same reference
+		boolean genTx = false;
 		if(ref[4].equals(Strings.Genesis)){//for experiments, in practice this piece of code should be modified to check if this transaction is a genuine genTx
-			return true;
+			genTx = true;
 		}
 		//check the pool
 		List<Transaction> unconfirmedPool = UnconfirmedTx.getCopy();
 		for(Transaction T : unconfirmedPool){
-			if(T.RefTx.equals(ref[4])){
+			if(!genTx){
+				if(T.RefTx.equals(ref[4])){
+					System.out.println(ref[0] + " reference already used in TxPool");
+					return false;
+				}
+			}
+			if(T.TxNumber.equals(ref[0])){
 				System.out.println(ref[0] + " reference already used in TxPool");
 				return false;
-			}	
+			}
 		}
 		//check the blockchain
 		for(int i = BlockChain.MainChain.size()-1; i>= 0;i--){
 			Block b = BlockChain.MainChain.get(i);
 			for(Transaction Tx : b.TxList){
-				if(Tx.RefTx.equals(ref[4])){
-					System.out.println(ref[0] + " reference already used in blockchain");
+				if(!genTx){
+					if(Tx.RefTx.equals(ref[4])){
+						System.out.println(ref[0] + " reference already used in blockchain");
+						return false;
+					}
+				}
+				if(Tx.TxNumber.equals(ref[0])){
+					System.out.println(ref[0] + " reference already used in TxPool");
 					return false;
-
-				}	
+				}
 			}
 		}
 		//if in neither, return true
@@ -85,7 +98,9 @@ public class Validation {
 	private static boolean verifySig(String[] ref){
 		try {
 			boolean b = Main.keyClass.verifySig(ref[0], ref[1], ProofOfWork.sha256(ref[1] + ref[2] + ref[3] + ref[4]));
-			return b;
+			//return b;
+			//hardwired for puroses of experiment
+			return true;
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {

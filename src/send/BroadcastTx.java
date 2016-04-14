@@ -12,7 +12,7 @@ public class BroadcastTx {
 //		System.out.println("BroadcastTx: " + T.values());
 		try{
 			for(Node N : Peers.arr){
-				if(N.Type.equals("Miner")){
+				if(N.Type.equals("Miner")){//sends Tx to every connected Miner
 					this.str = N.IP;
 
 					C = new Client(str, 19996);

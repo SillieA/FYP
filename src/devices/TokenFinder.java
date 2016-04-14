@@ -61,10 +61,7 @@ public class TokenFinder {
 					if(T.To.equals(pubk)){
 						ownedTxArr.add(T);
 					}
-//					System.out.println();
-//					System.out.println(pubk);
-//					System.out.println(T.To);
-//					System.out.println();
+
 				}
 				if(b.gen.To.equals(pubk)){
 					ownedTxArr.add(b.gen);

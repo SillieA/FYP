@@ -17,7 +17,7 @@ import core.Strings;
 import core.Transaction;
 import peers.Peers;
 import server.BlockHandler;
-
+//originally based on : http://cs.lmu.edu/~ray/notes/javanetexamples/#capitalize. has been heavily modified since
 public class Client {
 
 	private BufferedReader in;
@@ -102,7 +102,7 @@ public class Client {
 		}
 	}
 	//inputs
-	private void receiveBlockChain(String message) {
+	private void receiveBlockChain(String message) {//process for receiving block chain
 		BlockHandler bh = new BlockHandler();
 		int difficulty = 0;
 		int currentDifficulty;
@@ -122,7 +122,7 @@ public class Client {
 //		bh.printChain();
 		terminateConnection();
 	}
-	private void receiveDifficulty(String message) {
+	private void receiveDifficulty(String message) {//process for receiving difficulty, part of block chain synchronisation process
 		String m[] = message.split(" ");
 		int inputNumber = 0;
 		int currentDifficulty;

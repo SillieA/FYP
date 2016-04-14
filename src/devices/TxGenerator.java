@@ -15,7 +15,7 @@ import send.BroadcastTx;
 public class TxGenerator {
 	
 	
-	ArrayList<TimeStampedToken> createdTx;
+	static ArrayList<TimeStampedToken> createdTx;
 	
 	public TxGenerator(final int repeats,final String tokenName, final int interval){
 		
@@ -65,14 +65,13 @@ public class TxGenerator {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				txSendTime();
-				TokenFinder.saveTimestamps();
+				
 			}
 		};
 		t.start();
 	}
 	//saves time Tx were sent to file
-		public void txSendTime(){
+		public static void txSendTime(){
 			try {
 				System.out.println("Saving Token Send times");
 				

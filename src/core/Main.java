@@ -30,10 +30,11 @@ public class Main {
 
 	//main method
 	public static void main(String args[]) throws FileNotFoundException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, NoSuchProviderException, SignatureException{
-		//args[0] = role
-		//args[1] = number of communications to send
-		//args[2] = token Name
-		//args[3] = interval time ms
+		
+		//args[0] = role (Miner, Node)
+		//args[1] = number of communications to send (positive integer)
+		//args[2] = token Name (tokens produced will show up with this name on the block chain
+		//args[3] = interval time ms (optional wait time in between sending transactions (ms)
 		if(args.length != 4){
 			while(true){
 				String name = JOptionPane.showInputDialog("<Role> <number of tokens to send> <token name> <interval between sends>");
@@ -72,6 +73,7 @@ public class Main {
 	//		gui.setVisible(true);
 	//		gui.setTitle("table");
 	//	}
+	//starts the server to listen for connections/requests
 	public static void startServer(){
 		Thread t = new Thread() {
 			public void run() {

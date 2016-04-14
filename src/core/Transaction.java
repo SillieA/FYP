@@ -48,9 +48,10 @@ public class Transaction {
 		return From + To + Token + RefTx;
 	}
 	public String[] valuesArr(){
-		String[] s = {TxNumber, From, To,Token,RefTx};
+		String[] s = {TxNumber,From,To,Token,RefTx};
 		return s;
 	}
+	//generates a reference for the transaction by signing a hash of data in transaction with private key
 	public void generateReference(){
 		String hash = ProofOfWork.sha256(valuesForSignature());
 		try {

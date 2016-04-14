@@ -9,6 +9,8 @@ import java.util.Set;
 import core.BlockChain;
 import core.Main;
 import core.Strings;
+import devices.TokenFinder;
+import devices.TxGenerator;
 import miner.ProofOfWork;
 import send.Client;
 
@@ -23,6 +25,7 @@ public class Peers {
 			public void run(){
 				try{
 					while(true){
+						//syncronises local peers with peer server peers
 						syncPeers();
 
 						Thread.sleep(1500);
@@ -34,9 +37,12 @@ public class Peers {
 						printPeers();
 						
 						Thread.sleep(60000);
-						
-						System.out.println("Saving blockchain...");
+						//save files regularly
+						System.out.println("Saving files...");
 						BlockChain.saveBlockChain();
+						TxGenerator.txSendTime();
+						TokenFinder.saveTimestamps();
+						System.out.println("Finished save!");
 					}
 				}catch(Exception e){
 					System.out.println("Could not connect to Peer server. Ensure server is running and restart program.");
@@ -73,7 +79,6 @@ public class Peers {
 			if(!p.PK.equals(Main.keyClass.returnPublicKey(Main.keyP))){
 				arr.add(p);
 			}
-			
 		}
 		else{
 			System.out.println("ERROR: Peers node info contains incorrect number of elements");
@@ -98,7 +103,7 @@ public class Peers {
 	public static void clear(){
 		arr.clear();
 	}
-	public static Node getRandomNode(){
+	public static Node getRandomNode(){//for sending out tokens randomly in experiment
 		Random r = new Random();
 		while(true){
 			if(arr.size() == 0){

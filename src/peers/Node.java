@@ -1,6 +1,6 @@
 package peers;
 
-public class Node {
+public class Node {//stores information about connected peers
 	public String IP;
 	public String PK;
 	public String Type;

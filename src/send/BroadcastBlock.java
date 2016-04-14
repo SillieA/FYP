@@ -11,7 +11,7 @@ public class BroadcastBlock {
 	public BroadcastBlock(Block b){
 //		System.out.println("Broadcasting Block");
 		for(int i = 0; i < Peers.arr.size();i++){
-			Node p = Peers.arr.get(i);
+			Node p = Peers.arr.get(i);//sends Block to every connected peer
 			this.c = new Client(p.IP, Strings.ServerPort);
 			try {
 				Thread.sleep(1500);

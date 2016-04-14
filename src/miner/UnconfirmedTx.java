@@ -31,12 +31,13 @@ public class UnconfirmedTx {
 							System.out.println(Strings.ErrorThreadWait);
 						}
 					}
-					else{
+					else{//whenever there's txs in the queue...
 						System.out.println(Strings.NoteTxPoolPopulated + queue.size());
 						while(!queue.isEmpty()){
+							//validate tx
 							Transaction T = queue.poll();
 							if(Validation.checkTx(T)){
-								c.add(T);
+								c.add(T);//add if valid, discard if not
 							}
 						}
 					}
@@ -46,6 +47,7 @@ public class UnconfirmedTx {
 		Thread thr = new Thread(r);
 		thr.start();
 	}
+	//add to queue
 	public static void push(Transaction T){
 		queue.add(T);
 	}

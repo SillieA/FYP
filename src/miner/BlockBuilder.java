@@ -24,8 +24,9 @@ public class BlockBuilder {
 				}
 				System.out.println(Strings.NoteCurrentBlockUp);
 				while(true){
+					//if tx list is too small..
 					if(TxList.size()<2){
-						try {
+						try {//wait.
 							Thread.sleep(1500);;
 						} catch (InterruptedException e) {
 							e.printStackTrace();
@@ -70,6 +71,7 @@ public class BlockBuilder {
 	public void add(Transaction Tx){
 		TxList.add(Tx);
 	}
+	//pushes tx's from block back into unconfirmedTx list
 	public static void dump(){
 		for(Transaction T:TxList){
 			miner.UnconfirmedTx.push(T);

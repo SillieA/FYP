@@ -7,7 +7,9 @@ import java.security.*;
 import java.security.spec.*;
 
 import javax.xml.bind.DatatypeConverter;
- //source: http://snipplr.com/view/18368/
+ 	//source: http://snipplr.com/view/18368/
+	//alterations were made to this code to change the encoding used to base 64
+	//and some code was added to verify the signature
 public class Keys {
  
 	public static void createKeys() {
@@ -50,23 +52,15 @@ public class Keys {
         bufin.close();
         in.close();
         byte[] realSig = dsa.sign();
-        //from http://stackoverflow.com/questions/27201847/error-decoding-signature-bytes-java-security-signatureexception-error-decodi
+        
         String signTostring = DatatypeConverter.printBase64Binary(realSig);
         signTostring = URLEncoder.encode(signTostring, "UTF-8");
         return signTostring;
 	}
 	public boolean verifySig(String signature, String key, String data) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, InvalidKeyException, SignatureException{
-//		InputStream in = new ByteArrayInputStream(key.getBytes());
-//        byte[] encKey = new byte[in.available()];  
-//        in.read(encKey);
-//
-//        in.close();
-//        X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(encKey);
-//
-//        KeyFactory keyFactory = KeyFactory.getInstance("DSA", "SUN");
-//        PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
+
 		PublicKey pubKey = Main.keyP.getPublic();
-		 //from http://stackoverflow.com/questions/27201847/error-decoding-signature-bytes-java-security-signatureexception-error-decodi
+		
 		String st = URLDecoder.decode(signature, "UTF-8");
 		byte[] sign_byte = DatatypeConverter.parseBase64Binary(st); 
         
@@ -97,16 +91,7 @@ public class Keys {
 		PrivateKey priv = keyPair.getPrivate();
 		System.out.println("Private Key: " + getHexString(priv.getEncoded()));
 	}
-//	public static String[] returnKeyPair(KeyPair keyPair) {
-//		PublicKey pub = keyPair.getPublic();
-//		
-//		String s1 = getHexStrings(pub.getEncoded());
-// 
-//		PrivateKey priv = keyPair.getPrivate();
-//		String s2 = getHexStrings(priv.getEncoded());
-//		String[] arr = {s1,s2};
-//		return arr;
-//	}
+	//returns both keys
 	public String[] returnKeyPair(KeyPair keyPair) throws UnsupportedEncodingException{
 		PublicKey pub = keyPair.getPublic();
         String s1 = DatatypeConverter.printBase64Binary(pub.getEncoded());
@@ -120,6 +105,7 @@ public class Keys {
         
         return arr;
 	}
+	//returns public key
 	public String returnPublicKey(KeyPair keyPair){
 		String[] s;
 		try {
@@ -131,7 +117,6 @@ public class Keys {
 		return s[0];
 	}
 
- 
 	private static String getHexString(byte[] b) {
 		String result = "";
 		for (int i = 0; i < b.length; i++) {

@@ -52,6 +52,7 @@ public class Block {
 		key = Main.keyClass.returnPublicKey(Main.keyP);
 		rewardTx(Strings.rewards());
 	}
+	//this method is used by the table GUI class
 	public String[][] valuesArr(){
 		List<String> values = new ArrayList<String>();
 		List<String> type = new ArrayList<String>();
@@ -101,7 +102,7 @@ public class Block {
 		gen = new Transaction("", Strings.Genesis,this.key,token, hashHeader);
 		gen.generateReference();
 	}
-	//returns all of the values in theory
+	//returns all of the values of the block for saving to txt file
 	public String allValues(){
 		String Header = "\r\n@HED " +  headerValues();//returns the values of the header
 		String Meta = "\r\n@MET " + metaValues();
@@ -111,6 +112,7 @@ public class Block {
 		
 		return Header + Meta + Gen + Transactions ;
 	}
+	//values for sending block
 	public String valuesDelimited(){
 		String Header = " " + Strings.HeadDelim + " " + headerValues() +  " " + Strings.HeadDelim + " ";//returns the values of the header
 		String Meta = " " + Strings.MetaDelim + " " + metaValues() + " " + Strings.MetaDelim + " ";
@@ -140,6 +142,7 @@ public class Block {
 	public String metaValues(){
 		return hashHeader + " " + String.valueOf(TxCount) + " " + String.valueOf(difficulty) + " " + key;
 	}
+	//values of the reward transaction
 	public String generatedTxValues(){
 		String gen = this.gen.values();
 		return gen;

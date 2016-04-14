@@ -1,5 +1,5 @@
 package server;
-//source : http://cs.lmu.edu/~ray/notes/javanetexamples/#capitalize
+//originally based on : http://cs.lmu.edu/~ray/notes/javanetexamples/#capitalize. has been heavily modified since
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -124,16 +124,13 @@ public class Server {
 			try{
 
 				String[] txVal = message.split(" ");//split at the spaces
-
+				
 				try{
-					T.write(txVal[0],txVal[1],txVal[2],txVal[3],txVal[4]);//make 5 words into new tx
-					T.generateReference();
-//					if(Validation.checkTx(T) == true){
-						UnconfirmedTx.push(T);
-//					}
-//					else{
-//						System.out.println("TX not valid");
-//					}
+					T.write(txVal[1],txVal[2],txVal[3],txVal[4],txVal[5]);//make 5 words into new tx
+
+
+					UnconfirmedTx.push(T);
+					
 				}catch(ArrayIndexOutOfBoundsException e){
 					System.out.println("Error with Tx parameters");
 				}
@@ -143,8 +140,6 @@ public class Server {
 				e.printStackTrace();
 			}
 			terminateConnection();
-			
-
 		}
 	
 		//CO3

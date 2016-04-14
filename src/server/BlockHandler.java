@@ -26,8 +26,8 @@ public class BlockHandler {
 		}
 		return difficulty;
 	}
-
-	public int blockReceive(String s, boolean addToAltChain){//should only be true when receiving blockchain
+	//reads in block
+	public int blockReceive(String s, boolean addToAltChain){//addToAltChain should only be true when receiving blockchain. it collects all incoming blocks to a chain if true.
 		Transaction GenTx;
 		Block b;
 		ArrayList<Transaction> txArr = new ArrayList<Transaction>();
@@ -120,8 +120,6 @@ public class BlockHandler {
 			
 			return b.difficulty;
 		}
-
-
 	}
 	
 
